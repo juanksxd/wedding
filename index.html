@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ===== TODOS LOS ESTILOS (igual que antes) ===== */
+        /* ===== RESET Y VARIABLES ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #F5E6E8;
@@ -256,7 +256,7 @@
             margin-right: 8px;
         }
 
-        /* ===== LOGIN BUTTON ===== */
+        /* ===== AUTH SECTION ===== */
         .auth-section {
             display: flex;
             align-items: center;
@@ -271,6 +271,7 @@
         .auth-status {
             color: var(--text-light);
             font-size: 14px;
+            flex: 1;
         }
         .auth-status i {
             color: var(--secondary);
@@ -710,55 +711,6 @@
             border-color: var(--secondary);
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1200px) { .main-content { padding: 30px 30px; } }
-        @media (max-width: 992px) {
-            .row-two { grid-template-columns: 1fr; }
-            .venues-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-                box-shadow: 4px 0 30px rgba(0,0,0,0.2);
-            }
-            .sidebar.open { transform: translateX(0); }
-            .hamburger { display: block; }
-            .main-content {
-                margin-left: 0;
-                padding: 20px 16px;
-                padding-top: 80px;
-            }
-            .top-bar h2 { font-size: 24px; }
-            .top-bar .date { font-size: 12px; padding: 6px 14px; }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .stat-card { padding: 16px 18px; }
-            .stat-card .stat-number { font-size: 26px; }
-            .stat-card .stat-icon { font-size: 24px; }
-            .card { padding: 18px 16px; }
-            .chart-bar-item .bar-label { width: 60px; font-size: 12px; }
-            .chart-bar-item .bar-value { width: 50px; font-size: 12px; }
-            .mini-table { font-size: 12px; }
-            .mini-table th, .mini-table td { padding: 8px 10px; }
-            .task-list .task-text { font-size: 14px; }
-            .card-header-actions { flex-direction: column; align-items: stretch; }
-            .venues-grid, .menu-cards, .provider-grid { grid-template-columns: 1fr; }
-            .auth-section { flex-direction: column; align-items: stretch; text-align: center; }
-        }
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .top-bar h2 { font-size: 20px; }
-            .main-content { padding: 16px 12px; padding-top: 75px; }
-            .stat-card .stat-number { font-size: 22px; }
-            .hamburger { top: 12px; left: 12px; padding: 8px 10px; font-size: 20px; }
-        }
-        .mt-20 { margin-top: 20px; }
-        .text-center { text-align: center; }
-        .hidden { display: none !important; }
-        
         /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
@@ -849,10 +801,63 @@
         .modal .modal-actions .btn-delete {
             background: #dc3545;
             color: white;
+            display: none;
         }
         .modal .modal-actions .btn-delete:hover {
             background: #c82333;
         }
+        .modal .modal-actions .btn-delete.show {
+            display: inline-block;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) { .main-content { padding: 30px 30px; } }
+        @media (max-width: 992px) {
+            .row-two { grid-template-columns: 1fr; }
+            .venues-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 30px rgba(0,0,0,0.2);
+            }
+            .sidebar.open { transform: translateX(0); }
+            .hamburger { display: block; }
+            .main-content {
+                margin-left: 0;
+                padding: 20px 16px;
+                padding-top: 80px;
+            }
+            .top-bar h2 { font-size: 24px; }
+            .top-bar .date { font-size: 12px; padding: 6px 14px; }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .stat-card { padding: 16px 18px; }
+            .stat-card .stat-number { font-size: 26px; }
+            .stat-card .stat-icon { font-size: 24px; }
+            .card { padding: 18px 16px; }
+            .chart-bar-item .bar-label { width: 60px; font-size: 12px; }
+            .chart-bar-item .bar-value { width: 50px; font-size: 12px; }
+            .mini-table { font-size: 12px; }
+            .mini-table th, .mini-table td { padding: 8px 10px; }
+            .task-list .task-text { font-size: 14px; }
+            .card-header-actions { flex-direction: column; align-items: stretch; }
+            .venues-grid, .menu-cards, .provider-grid { grid-template-columns: 1fr; }
+            .auth-section { flex-direction: column; align-items: stretch; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .top-bar h2 { font-size: 20px; }
+            .main-content { padding: 16px 12px; padding-top: 75px; }
+            .stat-card .stat-number { font-size: 22px; }
+            .hamburger { top: 12px; left: 12px; padding: 8px 10px; font-size: 20px; }
+        }
+        .mt-20 { margin-top: 20px; }
+        .text-center { text-align: center; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -1071,16 +1076,14 @@
 
     </main>
 
-    <!-- ===== MODAL (para agregar/editar) ===== -->
+    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modalContent">
             <h3 id="modalTitle">Agregar</h3>
-            <div id="modalForm">
-                <!-- Los campos se generan dinámicamente -->
-            </div>
+            <div id="modalForm"></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn-delete hidden" id="btnDelete" onclick="eliminarRegistro()">Eliminar</button>
+                <button class="btn-delete" id="btnDelete" onclick="confirmarEliminar()">Eliminar</button>
                 <button class="btn-save" onclick="guardarRegistro()">Guardar</button>
             </div>
         </div>
@@ -1088,29 +1091,11 @@
 
     <script>
         // ============================================================
-        // CONFIGURACIÓN OAuth 2.0
+        // 🔴 CONFIGURACIÓN - ¡CAMBIA ESTOS VALORES!
         // ============================================================
-        const CLIENT_ID = '202478829083-n5nji5vmp7tfj1fapqq5u0j4dq6jpf2j.apps.googleusercontent.com ';  // ← PEGA TU CLIENT_ID DE OAuth
-        const SHEET_ID = '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';   // ← PEGA EL ID DE TU HOJA
-        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-
-        // ============================================================
-        // VARIABLES GLOBALES
-        // ============================================================
-        let tokenClient = null;
-        let accessToken = null;
-        let isAuthenticated = false;
-        
-        let invitadosCache = [];
-        let gastosCache = [];
-        let salonesCache = [];
-        let menusCache = [];
-        let tareasCache = [];
-        let proveedoresCache = [];
-        
-        let modalTabla = '';
-        let modalId = null;
-        let modalData = null;
+        const CLIENT_ID = '202478829083-n5nji5vmp7tfj1fapqq5u0j4dq6jpf2j.apps.googleusercontent.com ';   // ← PEGA TU CLIENT_ID DE OAuth
+        const SHEET_ID = '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';    // ← PEGA EL ID DE TU HOJA
+        const API_KEY = 'AIzaSyCBdT4V_7Zz01zcZTHTBXi1MlRb-Z5mASk';      // ← PEGA TU API_KEY (para modo lectura)
 
         // ============================================================
         // RANGOS DE CADA PESTAÑA
@@ -1125,44 +1110,86 @@
         };
 
         // ============================================================
-        // INICIALIZAR GOOGLE API
+        // VARIABLES GLOBALES
+        // ============================================================
+        let accessToken = null;
+        let isAuthenticated = false;
+        let tokenClient = null;
+        
+        let invitadosCache = [];
+        let gastosCache = [];
+        let salonesCache = [];
+        let menusCache = [];
+        let tareasCache = [];
+        let proveedoresCache = [];
+        
+        let modalTabla = '';
+        let modalId = null;
+
+        // ============================================================
+        // INICIAR GOOGLE API
         // ============================================================
         function initGoogleAPI() {
-            gapi.load('client', function() {
-                gapi.client.init({
-                    apiKey: '',  // No necesitamos API Key con OAuth
-                    clientId: CLIENT_ID,
-                    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-                    scope: SCOPES,
-                }).then(function() {
-                    // Verificar si ya está autenticado
-                    const token = gapi.client.getToken();
-                    if (token) {
-                        accessToken = token.access_token;
+            // Asegurar que google.accounts está disponible
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/spreadsheets',
+                    callback: function(tokenResponse) {
+                        if (tokenResponse.error) {
+                            console.error('Error de autenticación:', tokenResponse.error);
+                            alert('Error al iniciar sesión. Intenta de nuevo.');
+                            return;
+                        }
+                        accessToken = tokenResponse.access_token;
                         isAuthenticated = true;
+                        console.log('✅ Autenticación exitosa');
+                        localStorage.setItem('google_token', JSON.stringify({
+                            access_token: accessToken,
+                            expires_at: Date.now() + 3600000
+                        }));
                         actualizarUIAuth();
                         cargarTodosLosDatos();
-                    } else {
-                        isAuthenticated = false;
-                        actualizarUIAuth();
-                        // Cargar datos en modo solo lectura (con API Key)
-                        cargarTodosLosDatos();
-                    }
-                }).catch(function(err) {
-                    console.error('Error inicializando Google API:', err);
-                    // Intentar cargar datos con API Key
-                    cargarTodosLosDatos();
+                    },
                 });
-            });
+                verificarSesion();
+            } else {
+                console.warn('Google API no disponible, usando modo lectura');
+                cargarTodosLosDatos();
+            }
         }
 
         // ============================================================
-        // AUTENTICACIÓN
+        // VERIFICAR SESIÓN GUARDADA
+        // ============================================================
+        function verificarSesion() {
+            try {
+                const saved = localStorage.getItem('google_token');
+                if (saved) {
+                    const tokenData = JSON.parse(saved);
+                    if (tokenData.access_token && tokenData.expires_at > Date.now()) {
+                        accessToken = tokenData.access_token;
+                        isAuthenticated = true;
+                        console.log('✅ Sesión restaurada');
+                        actualizarUIAuth();
+                        cargarTodosLosDatos();
+                        return;
+                    }
+                }
+            } catch (e) {
+                localStorage.removeItem('google_token');
+            }
+            // Si no hay sesión, cargar en modo lectura
+            cargarTodosLosDatos();
+        }
+
+        // ============================================================
+        // MANEJAR CLICK DE AUTENTICACIÓN
         // ============================================================
         function handleAuthClick() {
             if (isAuthenticated) {
                 // Cerrar sesión
-                gapi.client.setToken(null);
+                localStorage.removeItem('google_token');
                 accessToken = null;
                 isAuthenticated = false;
                 actualizarUIAuth();
@@ -1171,93 +1198,89 @@
             }
             
             // Iniciar sesión
-            const tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: function(tokenResponse) {
-                    if (tokenResponse.error) {
-                        console.error('Error de autenticación:', tokenResponse.error);
-                        alert('Error al iniciar sesión. Intenta de nuevo.');
-                        return;
-                    }
-                    accessToken = tokenResponse.access_token;
-                    gapi.client.setToken(tokenResponse);
-                    isAuthenticated = true;
-                    actualizarUIAuth();
-                    cargarTodosLosDatos();
-                },
-            });
-            tokenClient.requestAccessToken({ prompt: 'consent' });
+            if (tokenClient) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                alert('La autenticación no está lista. Intenta recargar la página.');
+            }
         }
 
+        // ============================================================
+        // ACTUALIZAR UI DE AUTENTICACIÓN
+        // ============================================================
         function actualizarUIAuth() {
             const statusText = document.getElementById('authText');
             const authBtn = document.getElementById('authBtn');
             
-            if (isAuthenticated) {
+            if (isAuthenticated && accessToken) {
                 statusText.innerHTML = '✅ Conectado con Google - <strong>Puedes editar los datos</strong>';
                 authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Cerrar sesión';
                 authBtn.classList.add('logout');
-                // Activar botones de edición
                 document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = false);
             } else {
                 statusText.innerHTML = '🔑 Conecta con Google para <strong>editar</strong> los datos (lectura disponible)';
                 authBtn.innerHTML = '<i class="fab fa-google"></i> Iniciar sesión';
                 authBtn.classList.remove('logout');
-                // Desactivar botones de edición (solo lectura)
                 document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
             }
         }
 
         // ============================================================
-        // FUNCIONES PARA SHEETS (con OAuth)
+        // FUNCIONES PARA SHEETS
         // ============================================================
         async function obtenerDatos(rango) {
             try {
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SHEET_ID,
-                    range: rango,
-                });
-                return response.result.values || [];
+                if (isAuthenticated && accessToken) {
+                    const response = await fetch(
+                        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${rango}`, {
+                            headers: { 'Authorization': `Bearer ${accessToken}` }
+                        }
+                    );
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    const data = await response.json();
+                    return data.values || [];
+                }
             } catch (error) {
-                console.error('Error obteniendo datos:', error);
-                // Fallback a API Key si falla OAuth
-                return obtenerDatosConAPIKey(rango);
+                console.warn('OAuth falló, usando API Key:', error);
             }
+            // Fallback a API Key
+            return obtenerDatosConAPIKey(rango);
         }
 
         async function obtenerDatosConAPIKey(rango) {
-            // Usar API Key como fallback (solo lectura)
-            const API_KEY = 'AIzaSyD7fX8yZ9w1q2r3s4t5u6v7w8x9y0z1a2b3c'; // ← PON TU API KEY AQUÍ
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${rango}?key=${API_KEY}`;
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('Error HTTP: ' + response.status);
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
                 return data.values || [];
             } catch (error) {
-                console.error('Error obteniendo datos con API Key:', error);
+                console.error('Error con API Key:', error);
                 return [];
             }
         }
 
         async function escribirDatos(rango, valores) {
-            if (!isAuthenticated) {
-                alert('⚠️ Necesitas iniciar sesión con Google para editar los datos.');
+            if (!isAuthenticated || !accessToken) {
+                alert('⚠️ Necesitas iniciar sesión para editar.');
                 return null;
             }
-            
             try {
-                const response = await gapi.client.sheets.spreadsheets.values.update({
-                    spreadsheetId: SHEET_ID,
-                    range: rango,
-                    valueInputOption: 'USER_ENTERED',
-                    resource: { values: valores }
-                });
-                return response.result;
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${rango}?valueInputOption=USER_ENTERED`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ values: valores })
+                    }
+                );
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return await response.json();
             } catch (error) {
-                console.error('Error escribiendo datos:', error);
-                alert('❌ Error al guardar. Asegúrate de tener permisos de edición.');
+                console.error('Error escribiendo:', error);
+                alert('❌ Error al guardar. Revisa la consola.');
                 return null;
             }
         }
@@ -1363,7 +1386,7 @@
             }
             document.getElementById('graficoGastos').innerHTML = graficoHTML;
 
-            // Tareas pendientes (Dashboard)
+            // Tareas
             const tareasPendientesLista = tareasCache.filter(t => t.Completada && t.Completada.toLowerCase() !== 'sí').slice(0, 5);
             let tareasHTML = '';
             if (tareasPendientesLista.length === 0) {
@@ -1385,7 +1408,7 @@
             }
             document.getElementById('listaTareasDashboard').innerHTML = tareasHTML;
 
-            // Últimos invitados (Dashboard)
+            // Últimos invitados
             const ultimosInvitados = invitadosCache.slice(0, 5);
             let invitadosHTML = '';
             if (ultimosInvitados.length === 0) {
@@ -1418,7 +1441,6 @@
             const confirmadoFiltro = document.getElementById('filtroConfirmado').value;
             const busqueda = document.getElementById('buscarInvitado').value.toLowerCase();
 
-            // Actualizar grupos
             const grupos = [...new Set(invitadosCache.map(i => i.Grupo).filter(g => g))];
             const selectGrupo = document.getElementById('filtroGrupo');
             const currentVal = selectGrupo.value;
@@ -1450,8 +1472,8 @@
                             <td>${i.Acompañantes || '0'}</td>
                             <td>${i.Dieta || 'Ninguna'}</td>
                             <td>
-                                <button class="btn-icon" onclick="editarRegistro('invitados', '${i.ID}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn-icon" onclick="eliminarRegistro('invitados', '${i.ID}')"><i class="fas fa-trash"></i></button>
+                                <button class="btn-icon" onclick="abrirModal('invitados', '${i.ID}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" onclick="confirmarEliminar('invitados', '${i.ID}')"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1503,8 +1525,8 @@
                             <td>${g.Fecha || '-'}</td>
                             <td><span class="status-badge ${pagado}">${pagadoText}</span></td>
                             <td>
-                                <button class="btn-icon" onclick="editarRegistro('gastos', '${g.ID}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn-icon" onclick="eliminarRegistro('gastos', '${g.ID}')"><i class="fas fa-trash"></i></button>
+                                <button class="btn-icon" onclick="abrirModal('gastos', '${g.ID}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" onclick="confirmarEliminar('gastos', '${g.ID}')"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1522,23 +1544,21 @@
         // ============================================================
         function actualizarSalones() {
             document.getElementById('totalSalones').textContent = salonesCache.length;
-
             let html = '';
             if (salonesCache.length === 0) {
                 html = '<p style="color: var(--text-light);">No hay salones registrados</p>';
             } else {
                 salonesCache.forEach(s => {
-                    const incluye = s.Incluye || 'No especificado';
                     html += `
                         <div class="venue-card">
                             <h3>🏛️ ${s.Nombre || 'Sin nombre'}</h3>
                             <div class="venue-detail"><i class="fas fa-map-pin"></i> ${s.Dirección || 'Sin dirección'}</div>
                             <div class="venue-detail"><i class="fas fa-users"></i> Aforo: ${s.Aforo || '0'} personas</div>
-                            <div class="venue-detail"><i class="fas fa-check-circle"></i> ${incluye}</div>
+                            <div class="venue-detail"><i class="fas fa-check-circle"></i> ${s.Incluye || 'No especificado'}</div>
                             <div class="venue-price">$${(parseFloat(s.Precio) || 0).toLocaleString()}</div>
                             <div style="display: flex; gap: 10px;">
-                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarRegistro('salones', '${s.ID}')"><i class="fas fa-edit"></i> Editar</button>
-                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarRegistro('salones', '${s.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
+                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="abrirModal('salones', '${s.ID}')"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="confirmarEliminar('salones', '${s.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
                             </div>
                         </div>
                     `;
@@ -1552,7 +1572,6 @@
         // ============================================================
         function actualizarMenus() {
             document.getElementById('totalMenus').textContent = menusCache.length;
-
             const iconos = ['🥩', '🥗', '🧒', '🍝', '🐟', '🌮'];
             let html = '';
             if (menusCache.length === 0) {
@@ -1565,7 +1584,7 @@
                             <h3>${m.Nombre || 'Sin nombre'}</h3>
                             <div class="menu-price">$${(parseFloat(m.PrecioPersona) || 0)} / persona</div>
                             <div class="menu-desc">${m.Descripción || 'Sin descripción'}</div>
-                            <button class="btn-primary" style="padding: 6px 18px; font-size: 13px; margin-top: 10px;" onclick="editarRegistro('menus', '${m.ID}')">
+                            <button class="btn-primary" style="padding: 6px 18px; font-size: 13px; margin-top: 10px;" onclick="abrirModal('menus', '${m.ID}')">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
                         </div>
@@ -1580,7 +1599,6 @@
         // ============================================================
         function actualizarTareas() {
             document.getElementById('totalTareas').textContent = tareasCache.length;
-
             let html = '';
             if (tareasCache.length === 0) {
                 html = '<li style="color: var(--text-light);">No hay tareas registradas</li>';
@@ -1596,8 +1614,8 @@
                             <span class="task-text ${completada ? 'done' : ''}">${t.Título || 'Sin título'}</span>
                             <span class="task-date">${t.FechaLimite || ''}</span>
                             <span class="task-priority ${prioridadClass}">${t.Prioridad || 'Media'}</span>
-                            <button class="btn-icon" onclick="editarRegistro('tareas', '${t.ID}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn-icon" onclick="eliminarRegistro('tareas', '${t.ID}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn-icon" onclick="abrirModal('tareas', '${t.ID}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="confirmarEliminar('tareas', '${t.ID}')"><i class="fas fa-trash"></i></button>
                         </li>
                     `;
                 });
@@ -1610,7 +1628,6 @@
         // ============================================================
         function actualizarProveedores() {
             document.getElementById('totalProveedores').textContent = proveedoresCache.length;
-
             let html = '';
             if (proveedoresCache.length === 0) {
                 html = '<p style="color: var(--text-light);">No hay proveedores registrados</p>';
@@ -1629,8 +1646,8 @@
                                 <span class="status-badge ${contratado}">${contratadoText}</span>
                             </div>
                             <div style="display: flex; gap: 10px;">
-                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarRegistro('proveedores', '${p.ID}')"><i class="fas fa-edit"></i> Editar</button>
-                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarRegistro('proveedores', '${p.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
+                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="abrirModal('proveedores', '${p.ID}')"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="confirmarEliminar('proveedores', '${p.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
                             </div>
                         </div>
                     `;
@@ -1644,59 +1661,46 @@
         // ============================================================
         async function toggleTarea(checkbox, titulo) {
             if (!isAuthenticated) {
-                alert('⚠️ Necesitas iniciar sesión para cambiar el estado de las tareas.');
+                alert('⚠️ Necesitas iniciar sesión para cambiar tareas.');
                 checkbox.checked = !checkbox.checked;
                 return;
             }
-
             const tarea = tareasCache.find(t => t.Título === titulo);
             if (!tarea) return;
-            
             const nuevoEstado = checkbox.checked ? 'Sí' : 'No';
             const fila = tareasCache.indexOf(tarea) + 2;
             const rango = `Tareas!D${fila}`;
-            
             await escribirDatos(rango, [[nuevoEstado]]);
             await cargarTodosLosDatos();
         }
 
         // ============================================================
-        // MODAL (Agregar/Editar)
+        // MODAL
         // ============================================================
         function abrirModal(tabla, id = null) {
             if (!isAuthenticated) {
-                alert('⚠️ Necesitas iniciar sesión con Google para agregar o editar datos.');
+                alert('⚠️ Necesitas iniciar sesión para agregar o editar.');
                 return;
             }
 
             modalTabla = tabla;
             modalId = id;
-            
-            let data = null;
-            let titulo = 'Agregar';
-            
-            if (id) {
-                // Editar
-                const cache = obtenerCache(tabla);
-                data = cache.find(item => item.ID == id);
-                if (data) {
-                    titulo = 'Editar';
-                    modalData = data;
-                }
-            }
-            
+
+            const cache = obtenerCache(tabla);
+            const data = id ? cache.find(item => item.ID == id) : null;
+            const titulo = id ? 'Editar' : 'Agregar';
+
             document.getElementById('modalTitle').textContent = `${titulo} ${getNombreTabla(tabla)}`;
             document.getElementById('modalForm').innerHTML = generarFormulario(tabla, data);
-            
-            // Mostrar/ocultar botón eliminar
+
             const btnDelete = document.getElementById('btnDelete');
             if (id) {
-                btnDelete.classList.remove('hidden');
+                btnDelete.classList.add('show');
                 btnDelete.onclick = function() { confirmarEliminar(tabla, id); };
             } else {
-                btnDelete.classList.add('hidden');
+                btnDelete.classList.remove('show');
             }
-            
+
             document.getElementById('modalOverlay').classList.add('active');
         }
 
@@ -1704,7 +1708,6 @@
             document.getElementById('modalOverlay').classList.remove('active');
             modalTabla = '';
             modalId = null;
-            modalData = null;
         }
 
         function getNombreTabla(tabla) {
@@ -1729,10 +1732,6 @@
                 proveedores: proveedoresCache
             };
             return caches[tabla] || [];
-        }
-
-        function getRango(tabla) {
-            return RANGOS[tabla] || '';
         }
 
         function getEncabezados(tabla) {
@@ -1763,26 +1762,19 @@
             let html = '';
             for (let i = 0; i < encabezados.length; i++) {
                 const campo = encabezados[i];
-                if (campo === 'ID') continue; // Ocultar ID
-                
+                if (campo === 'ID') continue;
                 const valor = data ? data[campo] || '' : '';
                 const esSelect = camposEspeciales[campo] !== undefined;
-                
-                html += `<div class="form-group">`;
-                html += `<label>${campo}</label>`;
-                
+                html += `<div class="form-group"><label>${campo}</label>`;
                 if (esSelect) {
                     html += `<select id="campo_${campo}">`;
-                    const opciones = camposEspeciales[campo];
-                    for (let j = 0; j < opciones.length; j++) {
-                        const selected = valor === opciones[j] ? 'selected' : '';
-                        html += `<option value="${opciones[j]}" ${selected}>${opciones[j]}</option>`;
-                    }
+                    camposEspeciales[campo].forEach(opcion => {
+                        html += `<option value="${opcion}" ${valor === opcion ? 'selected' : ''}>${opcion}</option>`;
+                    });
                     html += `</select>`;
                 } else {
                     html += `<input type="text" id="campo_${campo}" value="${valor}" placeholder="${campo}">`;
                 }
-                
                 html += `</div>`;
             }
             return html;
@@ -1793,19 +1785,17 @@
         // ============================================================
         async function guardarRegistro() {
             if (!isAuthenticated) {
-                alert('⚠️ Necesitas iniciar sesión para guardar cambios.');
+                alert('⚠️ Necesitas iniciar sesión.');
                 return;
             }
 
             const encabezados = getEncabezados(modalTabla);
             const cache = obtenerCache(modalTabla);
             
-            // Obtener valores del formulario
             const valores = [];
             for (let i = 0; i < encabezados.length; i++) {
                 const campo = encabezados[i];
                 if (campo === 'ID') {
-                    // Si es nuevo, asignar ID automático
                     if (!modalId) {
                         const maxId = cache.reduce((max, item) => Math.max(max, parseInt(item.ID) || 0), 0);
                         valores.push(maxId + 1);
@@ -1818,8 +1808,7 @@
                 valores.push(input ? input.value : '');
             }
 
-            // Determinar fila y rango
-            let fila = cache.length + 2; // Por defecto, al final
+            let fila = cache.length + 2;
             if (modalId) {
                 const index = cache.findIndex(item => item.ID == modalId);
                 if (index !== -1) fila = index + 2;
@@ -1836,24 +1825,17 @@
         }
 
         // ============================================================
-        // EDITAR REGISTRO
-        // ============================================================
-        function editarRegistro(tabla, id) {
-            abrirModal(tabla, id);
-        }
-
-        // ============================================================
         // ELIMINAR REGISTRO
         // ============================================================
         function confirmarEliminar(tabla, id) {
-            if (confirm(`¿Estás seguro de eliminar este registro?`)) {
+            if (confirm(`¿Eliminar este registro permanentemente?`)) {
                 eliminarRegistro(tabla, id);
             }
         }
 
         async function eliminarRegistro(tabla, id) {
             if (!isAuthenticated) {
-                alert('⚠️ Necesitas iniciar sesión para eliminar registros.');
+                alert('⚠️ Necesitas iniciar sesión.');
                 return;
             }
 
@@ -1861,14 +1843,11 @@
             const index = cache.findIndex(item => item.ID == id);
             if (index === -1) return;
 
-            // En Sheets, no podemos "eliminar" filas fácilmente. En su lugar, limpiamos la fila.
             const encabezados = getEncabezados(tabla);
             const fila = index + 2;
             const rango = `${tabla}!A${fila}:${String.fromCharCode(64 + encabezados.length)}${fila}`;
             
-            // Crear array vacío para limpiar la fila
             const valoresVacios = encabezados.map(() => '');
-            
             const resultado = await escribirDatos(rango, [valoresVacios]);
             
             if (resultado) {
@@ -1935,22 +1914,28 @@
         });
 
         // ============================================================
+        // RECARGAR DATOS (para botón externo)
+        // ============================================================
+        async function recargarDatos() {
+            await cargarTodosLosDatos();
+            alert('✅ Datos recargados correctamente');
+        }
+
+        // ============================================================
         // INICIALIZAR
         // ============================================================
         window.addEventListener('load', function() {
-            // Cargar la API de Google
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.onload = function() {
-                // Cargar gapi
-                const gapiScript = document.createElement('script');
-                gapiScript.src = 'https://apis.google.com/js/api.js';
-                gapiScript.onload = function() {
+            // Cargar GSI (Google Sign-In)
+            if (typeof google === 'undefined' || !google.accounts) {
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.onload = function() {
                     initGoogleAPI();
                 };
-                document.head.appendChild(gapiScript);
-            };
-            document.head.appendChild(script);
+                document.head.appendChild(script);
+            } else {
+                initGoogleAPI();
+            }
         });
 
         window.addEventListener('resize', function() {
@@ -1961,12 +1946,6 @@
                 icon.className = 'fas fa-bars';
             }
         });
-
-        // Función para recargar datos (usar en botón de sincronización)
-        async function recargarDatos() {
-            await cargarTodosLosDatos();
-            alert('✅ Datos recargados correctamente');
-        }
     </script>
 
 </body>
