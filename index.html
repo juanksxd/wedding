@@ -904,6 +904,9 @@
                 <button class="btn-google" id="authBtn" onclick="handleAuthClick()">
                     <i class="fab fa-google"></i> Iniciar sesión
                 </button>
+                <button onclick="verificarEstado()" style="background: var(--bg); color: var(--text-dark); border: 2px solid var(--border-color); padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-left: 10px;">
+                    🔍 Estado
+                </button>
             </div>
         </div>
 
@@ -1091,11 +1094,11 @@
 
     <script>
         // ============================================================
-        // 🔴 CONFIGURACIÓN - ¡CAMBIA ESTOS VALORES!
+        // 🔴 CONFIGURACIÓN - ¡CAMBIA AQUÍ!
         // ============================================================
-        const CLIENT_ID = '202478829083-n5nji5vmp7tfj1fapqq5u0j4dq6jpf2j.apps.googleusercontent.com ';   // ← PEGA TU CLIENT_ID DE OAuth
-        const SHEET_ID = '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';    // ← PEGA EL ID DE TU HOJA
-        const API_KEY = 'AIzaSyCBdT4V_7Zz01zcZTHTBXi1MlRb-Z5mASk';      // ← PEGA TU API_KEY (para modo lectura)
+        const CLIENT_ID = '202478829083-n5nji5vmp7tfj1fapqq5u0j4dq6jpf2j.apps.googleusercontent.com';      // ← PEga tu Client ID de OAuth (empieza con números)
+        const SHEET_ID = '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';       // ← ID de tu hoja (de la URL)
+        const API_KEY = 'AIzaSyCBdT4V_7Zz01zcZTHTBXi1MlRb-Z5mASk';         // ← Tu API Key (para modo lectura)
 
         // ============================================================
         // RANGOS DE CADA PESTAÑA
@@ -1129,52 +1132,53 @@
         // ============================================================
         // INICIAR GOOGLE API
         // ============================================================
-       function initGoogleAPI() {
-    // Verificar si la librería de Google está disponible
-    if (typeof google === 'undefined' || !google.accounts) {
-        console.warn('Google API no disponible, intentando cargar...');
-        setTimeout(initGoogleAPI, 1000);
-        return;
-    }
+        function initGoogleAPI() {
+            if (typeof google === 'undefined' || !google.accounts) {
+                console.warn('Google API no disponible, intentando cargar...');
+                setTimeout(initGoogleAPI, 1000);
+                return;
+            }
 
-    try {
-        tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: 'https://www.googleapis.com/auth/spreadsheets',
-            redirect_uri: 'https://juanksxd.github.io/wedding', // ← ¡AQUÍ ESTÁ!
-            callback: function(tokenResponse) {
-                if (tokenResponse.error) {
-                    console.error('Error:', tokenResponse.error);
-                    alert('Error al iniciar sesión: ' + tokenResponse.error);
-                    return;
-                }
-                // ¡ÉXITO! Guardar token
-                accessToken = tokenResponse.access_token;
-                isAuthenticated = true;
-                console.log('✅ Autenticación exitosa');
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/spreadsheets',
+                    redirect_uri: 'https://juanksxd.github.io/wedding',
+                    callback: function(tokenResponse) {
+                        console.log('🔄 Callback ejecutado', tokenResponse);
+                        
+                        if (tokenResponse.error) {
+                            console.error('Error en callback:', tokenResponse.error);
+                            alert('Error al iniciar sesión: ' + tokenResponse.error);
+                            return;
+                        }
+                        
+                        accessToken = tokenResponse.access_token;
+                        isAuthenticated = true;
+                        console.log('✅ Autenticación exitosa');
+                        
+                        localStorage.setItem('google_token', JSON.stringify({
+                            access_token: accessToken,
+                            expires_at: Date.now() + 3600000
+                        }));
+                        
+                        actualizarUIAuth();
+                        cargarTodosLosDatos();
+                        alert('✅ Sesión iniciada correctamente');
+                    },
+                });
                 
-                // Guardar en localStorage para persistencia
-                localStorage.setItem('google_token', JSON.stringify({
-                    access_token: accessToken,
-                    expires_at: Date.now() + 3600000
-                }));
-                
-                // Actualizar UI
-                actualizarUIAuth();
-                cargarTodosLosDatos();
-            },
-        });
-        
-        // Verificar si ya hay sesión guardada
-        verificarSesionGuardada();
-    } catch (error) {
-        console.error('Error inicializando autenticación:', error);
-    }
-}
+                verificarSesionGuardada();
+            } catch (error) {
+                console.error('Error inicializando autenticación:', error);
+                alert('Error al inicializar autenticación: ' + error.message);
+            }
+        }
+
         // ============================================================
         // VERIFICAR SESIÓN GUARDADA
         // ============================================================
-        function verificarSesion() {
+        function verificarSesionGuardada() {
             try {
                 const saved = localStorage.getItem('google_token');
                 if (saved) {
@@ -1191,7 +1195,6 @@
             } catch (e) {
                 localStorage.removeItem('google_token');
             }
-            // Si no hay sesión, cargar en modo lectura
             cargarTodosLosDatos();
         }
 
@@ -1200,7 +1203,6 @@
         // ============================================================
         function handleAuthClick() {
             if (isAuthenticated) {
-                // Cerrar sesión
                 localStorage.removeItem('google_token');
                 accessToken = null;
                 isAuthenticated = false;
@@ -1209,12 +1211,25 @@
                 return;
             }
             
-            // Iniciar sesión
             if (tokenClient) {
+                console.log('🚀 Solicitando autenticación...');
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
-                alert('La autenticación no está lista. Intenta recargar la página.');
+                alert('La autenticación no está lista. Recarga la página.');
             }
+        }
+
+        // ============================================================
+        // VERIFICAR ESTADO (botón de depuración)
+        // ============================================================
+        function verificarEstado() {
+            const token = localStorage.getItem('google_token');
+            console.log('🔍 Estado actual:');
+            console.log('- isAuthenticated:', isAuthenticated);
+            console.log('- accessToken:', accessToken ? '✅ Sí' : '❌ No');
+            console.log('- localStorage:', token ? '✅ Sí' : '❌ No');
+            alert('Estado:\n- Autenticado: ' + (isAuthenticated ? '✅ Sí' : '❌ No') + 
+                  '\n- Token guardado: ' + (token ? '✅ Sí' : '❌ No'));
         }
 
         // ============================================================
@@ -1229,11 +1244,13 @@
                 authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Cerrar sesión';
                 authBtn.classList.add('logout');
                 document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = false);
+                console.log('✅ Modo edición activado');
             } else {
                 statusText.innerHTML = '🔑 Conecta con Google para <strong>editar</strong> los datos (lectura disponible)';
                 authBtn.innerHTML = '<i class="fab fa-google"></i> Iniciar sesión';
                 authBtn.classList.remove('logout');
                 document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
+                console.log('📖 Modo lectura activado');
             }
         }
 
@@ -1250,12 +1267,12 @@
                     );
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     const data = await response.json();
+                    console.log(`✅ Datos obtenidos (OAuth): ${rango}`);
                     return data.values || [];
                 }
             } catch (error) {
                 console.warn('OAuth falló, usando API Key:', error);
             }
-            // Fallback a API Key
             return obtenerDatosConAPIKey(rango);
         }
 
@@ -1265,6 +1282,7 @@
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
+                console.log(`✅ Datos obtenidos (API Key): ${rango}`);
                 return data.values || [];
             } catch (error) {
                 console.error('Error con API Key:', error);
@@ -1289,6 +1307,7 @@
                     }
                 );
                 if (!response.ok) throw new Error('HTTP ' + response.status);
+                console.log(`✅ Datos escritos: ${rango}`);
                 return await response.json();
             } catch (error) {
                 console.error('Error escribiendo:', error);
@@ -1316,6 +1335,7 @@
         // CARGAR TODOS LOS DATOS
         // ============================================================
         async function cargarTodosLosDatos() {
+            console.log('🔄 Cargando datos...');
             try {
                 const [invitadosRaw, gastosRaw, salonesRaw, menusRaw, tareasRaw, proveedoresRaw] = await Promise.all([
                     obtenerDatos(RANGOS.invitados),
@@ -1332,6 +1352,15 @@
                 menusCache = procesarDatos(menusRaw);
                 tareasCache = procesarDatos(tareasRaw);
                 proveedoresCache = procesarDatos(proveedoresRaw);
+
+                console.log('✅ Datos cargados:', {
+                    invitados: invitadosCache.length,
+                    gastos: gastosCache.length,
+                    salones: salonesCache.length,
+                    menus: menusCache.length,
+                    tareas: tareasCache.length,
+                    proveedores: proveedoresCache.length
+                });
 
                 actualizarDashboard();
                 actualizarTablaInvitados();
@@ -1926,23 +1955,21 @@
         });
 
         // ============================================================
-        // RECARGAR DATOS (para botón externo)
-        // ============================================================
-        async function recargarDatos() {
-            await cargarTodosLosDatos();
-            alert('✅ Datos recargados correctamente');
-        }
-
-        // ============================================================
         // INICIALIZAR
         // ============================================================
         window.addEventListener('load', function() {
-            // Cargar GSI (Google Sign-In)
+            console.log('🚀 Iniciando Wedding Planner...');
+            
+            // Cargar librería de Google
             if (typeof google === 'undefined' || !google.accounts) {
                 const script = document.createElement('script');
                 script.src = 'https://accounts.google.com/gsi/client';
                 script.onload = function() {
+                    console.log('✅ Google API cargada');
                     initGoogleAPI();
+                };
+                script.onerror = function() {
+                    console.error('❌ Error cargando Google API');
                 };
                 document.head.appendChild(script);
             } else {
