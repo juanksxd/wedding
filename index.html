@@ -1129,36 +1129,48 @@
         // ============================================================
         // INICIAR GOOGLE API
         // ============================================================
-        function initGoogleAPI() {
-            // Asegurar que google.accounts está disponible
-            if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-                tokenClient = google.accounts.oauth2.initTokenClient({
-                    client_id: CLIENT_ID,
-                    scope: 'https://www.googleapis.com/auth/spreadsheets',
-                    callback: function(tokenResponse) {
-                        if (tokenResponse.error) {
-                            console.error('Error de autenticación:', tokenResponse.error);
-                            alert('Error al iniciar sesión. Intenta de nuevo.');
-                            return;
-                        }
-                        accessToken = tokenResponse.access_token;
-                        isAuthenticated = true;
-                        console.log('✅ Autenticación exitosa');
-                        localStorage.setItem('google_token', JSON.stringify({
-                            access_token: accessToken,
-                            expires_at: Date.now() + 3600000
-                        }));
-                        actualizarUIAuth();
-                        cargarTodosLosDatos();
-                    },
-                });
-                verificarSesion();
-            } else {
-                console.warn('Google API no disponible, usando modo lectura');
-                cargarTodosLosDatos();
-            }
-        }
+       function initGoogleAPI() {
+    // Verificar si la librería de Google está disponible
+    if (typeof google === 'undefined' || !google.accounts) {
+        console.warn('Google API no disponible, intentando cargar...');
+        setTimeout(initGoogleAPI, 1000);
+        return;
+    }
 
+    try {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/spreadsheets',
+            redirect_uri: 'https://juanksxd.github.io/wedding', // ← ¡AQUÍ ESTÁ!
+            callback: function(tokenResponse) {
+                if (tokenResponse.error) {
+                    console.error('Error:', tokenResponse.error);
+                    alert('Error al iniciar sesión: ' + tokenResponse.error);
+                    return;
+                }
+                // ¡ÉXITO! Guardar token
+                accessToken = tokenResponse.access_token;
+                isAuthenticated = true;
+                console.log('✅ Autenticación exitosa');
+                
+                // Guardar en localStorage para persistencia
+                localStorage.setItem('google_token', JSON.stringify({
+                    access_token: accessToken,
+                    expires_at: Date.now() + 3600000
+                }));
+                
+                // Actualizar UI
+                actualizarUIAuth();
+                cargarTodosLosDatos();
+            },
+        });
+        
+        // Verificar si ya hay sesión guardada
+        verificarSesionGuardada();
+    } catch (error) {
+        console.error('Error inicializando autenticación:', error);
+    }
+}
         // ============================================================
         // VERIFICAR SESIÓN GUARDADA
         // ============================================================
