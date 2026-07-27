@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💍 Mi Boda - Wedding Planner</title>
-    <!-- Font Awesome local (sin CDN) -->
+    <!-- Google API Client Library -->
+    <script src="https://apis.google.com/js/api.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET Y VARIABLES ===== */
+        /* ===== TODOS LOS ESTILOS (igual que antes) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #F5E6E8;
@@ -255,6 +256,52 @@
             margin-right: 8px;
         }
 
+        /* ===== LOGIN BUTTON ===== */
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+        .auth-status {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        .auth-status i {
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+        .btn-google {
+            background: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-google:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3);
+        }
+        .btn-google.logout {
+            background: #dc3545;
+        }
+        .btn-google.logout:hover {
+            background: #c82333;
+        }
+
         /* ===== TARJETAS ===== */
         .stats-grid {
             display: grid;
@@ -477,6 +524,7 @@
             padding: 4px 8px;
             border-radius: 6px;
             transition: var(--transition);
+            font-size: 16px;
         }
         .btn-icon:hover {
             background: var(--hover-bg);
@@ -500,6 +548,11 @@
             background: #B8924F;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         .btn-secondary {
             background: var(--hover-bg);
@@ -693,6 +746,7 @@
             .task-list .task-text { font-size: 14px; }
             .card-header-actions { flex-direction: column; align-items: stretch; }
             .venues-grid, .menu-cards, .provider-grid { grid-template-columns: 1fr; }
+            .auth-section { flex-direction: column; align-items: stretch; text-align: center; }
         }
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
@@ -703,6 +757,102 @@
         }
         .mt-20 { margin-top: 20px; }
         .text-center { text-align: center; }
+        .hidden { display: none !important; }
+        
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+        .modal .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        .modal .form-group input,
+        .modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text-dark);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .modal .modal-actions button {
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        .modal .modal-actions .btn-cancel {
+            background: var(--hover-bg);
+            color: var(--text-dark);
+        }
+        .modal .modal-actions .btn-cancel:hover {
+            background: var(--border-color);
+        }
+        .modal .modal-actions .btn-save {
+            background: var(--secondary);
+            color: white;
+        }
+        .modal .modal-actions .btn-save:hover {
+            background: #B8924F;
+            transform: translateY(-2px);
+        }
+        .modal .modal-actions .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        .modal .modal-actions .btn-delete:hover {
+            background: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -739,6 +889,18 @@
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <main class="main-content">
+
+        <!-- ===== SECCIÓN DE AUTENTICACIÓN ===== -->
+        <div class="auth-section" id="authSection">
+            <div class="auth-status" id="authStatus">
+                <i class="fas fa-info-circle"></i> <span id="authText">Conecta con Google para editar los datos</span>
+            </div>
+            <div>
+                <button class="btn-google" id="authBtn" onclick="handleAuthClick()">
+                    <i class="fab fa-google"></i> Iniciar sesión
+                </button>
+            </div>
+        </div>
 
         <!-- ===== SECCIÓN DASHBOARD ===== -->
         <div class="section active" id="section-dashboard">
@@ -791,6 +953,9 @@
             <div class="card">
                 <div class="card-header-actions">
                     <div class="card-title" style="margin-bottom: 0;"><i class="fas fa-users"></i> Últimos invitados</div>
+                    <button class="btn-primary" onclick="abrirModal('invitados')" id="btnAddInvitadoDashboard">
+                        <i class="fas fa-plus"></i> Añadir invitado
+                    </button>
                 </div>
                 <div class="table-wrap" style="margin-top: 18px;">
                     <table class="mini-table">
@@ -814,9 +979,9 @@
                     <div class="filter-bar">
                         <select id="filtroGrupo"><option value="todos">Todos los grupos</option></select>
                         <select id="filtroConfirmado"><option value="todos">Todos los estados</option><option value="Sí">Confirmados</option><option value="No">Pendientes</option></select>
-                        <input type="text" id="buscarInvitado" placeholder="Buscar invitado..." oninput="aplicarFiltrosInvitados()">
+                        <input type="text" id="buscarInvitado" placeholder="🔍 Buscar invitado..." oninput="aplicarFiltrosInvitados()">
                     </div>
-                    <button class="btn-primary" onclick="agregarInvitado()"><i class="fas fa-plus"></i> Añadir invitado</button>
+                    <button class="btn-primary" onclick="abrirModal('invitados')"><i class="fas fa-plus"></i> Añadir invitado</button>
                 </div>
                 <div class="table-wrap">
                     <table class="mini-table">
@@ -841,7 +1006,7 @@
                         <select id="filtroCategoriaGasto" onchange="aplicarFiltrosGastos()"><option value="todos">Todas las categorías</option></select>
                         <select id="filtroPagadoGasto" onchange="aplicarFiltrosGastos()"><option value="todos">Todos los estados</option><option value="Sí">Pagados</option><option value="No">Pendientes</option></select>
                     </div>
-                    <button class="btn-primary" onclick="agregarGasto()"><i class="fas fa-plus"></i> Añadir gasto</button>
+                    <button class="btn-primary" onclick="abrirModal('gastos')"><i class="fas fa-plus"></i> Añadir gasto</button>
                 </div>
                 <div class="table-wrap">
                     <table class="mini-table">
@@ -860,7 +1025,7 @@
                 <h2>🏛️ Opciones de Salón</h2>
                 <div class="date"><i class="fas fa-building"></i> <span id="totalSalones">0</span> opciones</div>
             </div>
-            <button class="btn-primary" onclick="agregarSalon()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir salón</button>
+            <button class="btn-primary" onclick="abrirModal('salones')" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir salón</button>
             <div class="venues-grid" id="gridSalones">
                 <p style="color: var(--text-light);">Cargando salones...</p>
             </div>
@@ -872,7 +1037,7 @@
                 <h2>🍽️ Opciones de Menú</h2>
                 <div class="date"><i class="fas fa-utensils"></i> <span id="totalMenus">0</span> opciones</div>
             </div>
-            <button class="btn-primary" onclick="agregarMenu()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir menú</button>
+            <button class="btn-primary" onclick="abrirModal('menus')" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir menú</button>
             <div class="menu-cards" id="gridMenus">
                 <p style="color: var(--text-light);">Cargando menús...</p>
             </div>
@@ -884,7 +1049,7 @@
                 <h2>✅ Lista de Tareas</h2>
                 <div class="date"><i class="fas fa-tasks"></i> <span id="totalTareas">0</span> tareas</div>
             </div>
-            <button class="btn-primary" onclick="agregarTarea()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir tarea</button>
+            <button class="btn-primary" onclick="abrirModal('tareas')" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir tarea</button>
             <div class="card">
                 <ul class="task-list" id="listaTareasCompleta">
                     <li style="color: var(--text-light);">Cargando tareas...</li>
@@ -898,7 +1063,7 @@
                 <h2>🚚 Proveedores</h2>
                 <div class="date"><i class="fas fa-truck"></i> <span id="totalProveedores">0</span> proveedores</div>
             </div>
-            <button class="btn-primary" onclick="agregarProveedor()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir proveedor</button>
+            <button class="btn-primary" onclick="abrirModal('proveedores')" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir proveedor</button>
             <div class="provider-grid" id="gridProveedores">
                 <p style="color: var(--text-light);">Cargando proveedores...</p>
             </div>
@@ -906,12 +1071,46 @@
 
     </main>
 
+    <!-- ===== MODAL (para agregar/editar) ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <h3 id="modalTitle">Agregar</h3>
+            <div id="modalForm">
+                <!-- Los campos se generan dinámicamente -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-delete hidden" id="btnDelete" onclick="eliminarRegistro()">Eliminar</button>
+                <button class="btn-save" onclick="guardarRegistro()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ============================================================
-        // CONFIGURACIÓN - ¡CAMBIA ESTOS VALORES!
+        // CONFIGURACIÓN OAuth 2.0
         // ============================================================
-        const SHEET_ID =  '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';  // ← PEGA EL ID DE TU HOJA
-        const API_KEY = 'AIzaSyCBdT4V_7Zz01zcZTHTBXi1MlRb-Z5mASk';    // ← PEGA TU API KEY
+        const CLIENT_ID = '202478829083-n5nji5vmp7tfj1fapqq5u0j4dq6jpf2j.apps.googleusercontent.com ';  // ← PEGA TU CLIENT_ID DE OAuth
+        const SHEET_ID = '1FKuOxs1sShaoTk_q5kiPm8DVjyBoV7RJmGf-U7TA2g4';   // ← PEGA EL ID DE TU HOJA
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+
+        // ============================================================
+        // VARIABLES GLOBALES
+        // ============================================================
+        let tokenClient = null;
+        let accessToken = null;
+        let isAuthenticated = false;
+        
+        let invitadosCache = [];
+        let gastosCache = [];
+        let salonesCache = [];
+        let menusCache = [];
+        let tareasCache = [];
+        let proveedoresCache = [];
+        
+        let modalTabla = '';
+        let modalId = null;
+        let modalData = null;
 
         // ============================================================
         // RANGOS DE CADA PESTAÑA
@@ -926,46 +1125,151 @@
         };
 
         // ============================================================
-        // FUNCIONES PARA SHEETS
+        // INICIALIZAR GOOGLE API
+        // ============================================================
+        function initGoogleAPI() {
+            gapi.load('client', function() {
+                gapi.client.init({
+                    apiKey: '',  // No necesitamos API Key con OAuth
+                    clientId: CLIENT_ID,
+                    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                    scope: SCOPES,
+                }).then(function() {
+                    // Verificar si ya está autenticado
+                    const token = gapi.client.getToken();
+                    if (token) {
+                        accessToken = token.access_token;
+                        isAuthenticated = true;
+                        actualizarUIAuth();
+                        cargarTodosLosDatos();
+                    } else {
+                        isAuthenticated = false;
+                        actualizarUIAuth();
+                        // Cargar datos en modo solo lectura (con API Key)
+                        cargarTodosLosDatos();
+                    }
+                }).catch(function(err) {
+                    console.error('Error inicializando Google API:', err);
+                    // Intentar cargar datos con API Key
+                    cargarTodosLosDatos();
+                });
+            });
+        }
+
+        // ============================================================
+        // AUTENTICACIÓN
+        // ============================================================
+        function handleAuthClick() {
+            if (isAuthenticated) {
+                // Cerrar sesión
+                gapi.client.setToken(null);
+                accessToken = null;
+                isAuthenticated = false;
+                actualizarUIAuth();
+                cargarTodosLosDatos();
+                return;
+            }
+            
+            // Iniciar sesión
+            const tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: function(tokenResponse) {
+                    if (tokenResponse.error) {
+                        console.error('Error de autenticación:', tokenResponse.error);
+                        alert('Error al iniciar sesión. Intenta de nuevo.');
+                        return;
+                    }
+                    accessToken = tokenResponse.access_token;
+                    gapi.client.setToken(tokenResponse);
+                    isAuthenticated = true;
+                    actualizarUIAuth();
+                    cargarTodosLosDatos();
+                },
+            });
+            tokenClient.requestAccessToken({ prompt: 'consent' });
+        }
+
+        function actualizarUIAuth() {
+            const statusText = document.getElementById('authText');
+            const authBtn = document.getElementById('authBtn');
+            
+            if (isAuthenticated) {
+                statusText.innerHTML = '✅ Conectado con Google - <strong>Puedes editar los datos</strong>';
+                authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Cerrar sesión';
+                authBtn.classList.add('logout');
+                // Activar botones de edición
+                document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = false);
+            } else {
+                statusText.innerHTML = '🔑 Conecta con Google para <strong>editar</strong> los datos (lectura disponible)';
+                authBtn.innerHTML = '<i class="fab fa-google"></i> Iniciar sesión';
+                authBtn.classList.remove('logout');
+                // Desactivar botones de edición (solo lectura)
+                document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES PARA SHEETS (con OAuth)
         // ============================================================
         async function obtenerDatos(rango) {
-            const url = 'https://sheets.googleapis.com/v4/spreadsheets/' + SHEET_ID + '/values/' + rango + '?key=' + API_KEY;
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SHEET_ID,
+                    range: rango,
+                });
+                return response.result.values || [];
+            } catch (error) {
+                console.error('Error obteniendo datos:', error);
+                // Fallback a API Key si falla OAuth
+                return obtenerDatosConAPIKey(rango);
+            }
+        }
+
+        async function obtenerDatosConAPIKey(rango) {
+            // Usar API Key como fallback (solo lectura)
+            const API_KEY = 'AIzaSyD7fX8yZ9w1q2r3s4t5u6v7w8x9y0z1a2b3c'; // ← PON TU API KEY AQUÍ
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${rango}?key=${API_KEY}`;
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Error HTTP: ' + response.status);
                 const data = await response.json();
                 return data.values || [];
             } catch (error) {
-                console.error('Error obteniendo datos:', error);
+                console.error('Error obteniendo datos con API Key:', error);
                 return [];
             }
         }
 
         async function escribirDatos(rango, valores) {
-            const url = 'https://sheets.googleapis.com/v4/spreadsheets/' + SHEET_ID + '/values/' + rango + '?key=' + API_KEY + '&valueInputOption=USER_ENTERED';
+            if (!isAuthenticated) {
+                alert('⚠️ Necesitas iniciar sesión con Google para editar los datos.');
+                return null;
+            }
+            
             try {
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ values: valores })
+                const response = await gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: SHEET_ID,
+                    range: rango,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: { values: valores }
                 });
-                if (!response.ok) throw new Error('Error HTTP: ' + response.status);
-                return await response.json();
+                return response.result;
             } catch (error) {
                 console.error('Error escribiendo datos:', error);
-                alert('Error al guardar en Sheets. Revisa la consola (F12).');
+                alert('❌ Error al guardar. Asegúrate de tener permisos de edición.');
                 return null;
             }
         }
 
         function procesarDatos(filas) {
             if (!filas || filas.length < 2) return [];
-            var encabezados = filas[0];
-            var datos = [];
-            for (var i = 1; i < filas.length; i++) {
-                var fila = filas[i];
-                var obj = {};
-                for (var j = 0; j < encabezados.length; j++) {
+            const encabezados = filas[0];
+            const datos = [];
+            for (let i = 1; i < filas.length; i++) {
+                const fila = filas[i];
+                const obj = {};
+                for (let j = 0; j < encabezados.length; j++) {
                     obj[encabezados[j].trim()] = fila[j] || '';
                 }
                 datos.push(obj);
@@ -974,152 +1278,134 @@
         }
 
         // ============================================================
-        // VARIABLES GLOBALES
+        // CARGAR TODOS LOS DATOS
         // ============================================================
-        var invitadosCache = [];
-        var gastosCache = [];
-        var salonesCache = [];
-        var menusCache = [];
-        var tareasCache = [];
-        var proveedoresCache = [];
+        async function cargarTodosLosDatos() {
+            try {
+                const [invitadosRaw, gastosRaw, salonesRaw, menusRaw, tareasRaw, proveedoresRaw] = await Promise.all([
+                    obtenerDatos(RANGOS.invitados),
+                    obtenerDatos(RANGOS.gastos),
+                    obtenerDatos(RANGOS.salones),
+                    obtenerDatos(RANGOS.menus),
+                    obtenerDatos(RANGOS.tareas),
+                    obtenerDatos(RANGOS.proveedores)
+                ]);
+
+                invitadosCache = procesarDatos(invitadosRaw);
+                gastosCache = procesarDatos(gastosRaw);
+                salonesCache = procesarDatos(salonesRaw);
+                menusCache = procesarDatos(menusRaw);
+                tareasCache = procesarDatos(tareasRaw);
+                proveedoresCache = procesarDatos(proveedoresRaw);
+
+                actualizarDashboard();
+                actualizarTablaInvitados();
+                actualizarTablaGastos();
+                actualizarSalones();
+                actualizarMenus();
+                actualizarTareas();
+                actualizarProveedores();
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
 
         // ============================================================
         // ACTUALIZAR DASHBOARD
         // ============================================================
-        async function actualizarDashboard() {
-            var invitadosRaw = await obtenerDatos(RANGOS.invitados);
-            var gastosRaw = await obtenerDatos(RANGOS.gastos);
-            var tareasRaw = await obtenerDatos(RANGOS.tareas);
-
-            invitadosCache = procesarDatos(invitadosRaw);
-            gastosCache = procesarDatos(gastosRaw);
-            tareasCache = procesarDatos(tareasRaw);
-
-            var totalInv = invitadosCache.length;
-            var confirmados = 0;
-            for (var i = 0; i < invitadosCache.length; i++) {
-                if (invitadosCache[i].Confirmado && invitadosCache[i].Confirmado.toLowerCase() === 'sí') {
-                    confirmados++;
-                }
-            }
-            var totalGasto = 0;
-            for (var j = 0; j < gastosCache.length; j++) {
-                totalGasto = totalGasto + (parseFloat(gastosCache[j].Importe) || 0);
-            }
-            var presupuesto = 10000;
-            var porcentaje = Math.round((totalGasto / presupuesto) * 100);
-            var restante = presupuesto - totalGasto;
-            var tareasPend = 0;
-            for (var k = 0; k < tareasCache.length; k++) {
-                if (tareasCache[k].Completada && tareasCache[k].Completada.toLowerCase() !== 'sí') {
-                    tareasPend++;
-                }
-            }
+        function actualizarDashboard() {
+            const totalInv = invitadosCache.length;
+            const confirmados = invitadosCache.filter(i => i.Confirmado && i.Confirmado.toLowerCase() === 'sí').length;
+            const totalGasto = gastosCache.reduce((sum, g) => sum + (parseFloat(g.Importe) || 0), 0);
+            const presupuesto = 10000;
+            const porcentaje = Math.round((totalGasto / presupuesto) * 100);
+            const restante = presupuesto - totalGasto;
+            const tareasPend = tareasCache.filter(t => t.Completada && t.Completada.toLowerCase() !== 'sí').length;
 
             document.getElementById('totalInvitados').textContent = totalInv;
             document.getElementById('confirmadosInvitados').textContent = confirmados;
-            document.getElementById('gastoTotal').textContent = '$' + totalGasto.toLocaleString();
-            document.getElementById('porcentajeUsado').textContent = porcentaje + '%';
-            document.getElementById('restantePresupuesto').textContent = '$' + restante.toLocaleString();
+            document.getElementById('gastoTotal').textContent = `$${totalGasto.toLocaleString()}`;
+            document.getElementById('porcentajeUsado').textContent = `${porcentaje}%`;
+            document.getElementById('restantePresupuesto').textContent = `$${restante.toLocaleString()}`;
             document.getElementById('tareasPendientes').textContent = tareasPend;
             document.getElementById('fechaActualizacion').textContent = new Date().toLocaleString();
 
             document.getElementById('invitadosBadge').textContent = totalInv;
-            document.getElementById('gastosBadge').textContent = '$' + totalGasto.toLocaleString();
+            document.getElementById('gastosBadge').textContent = `$${totalGasto.toLocaleString()}`;
             document.getElementById('tareasBadge').textContent = tareasPend;
 
             // Gráfico
-            var gastosPorCategoria = {};
-            for (var l = 0; l < gastosCache.length; l++) {
-                var cat = gastosCache[l].Categoría || 'Otros';
-                gastosPorCategoria[cat] = (gastosPorCategoria[cat] || 0) + (parseFloat(gastosCache[l].Importe) || 0);
-            }
-            var categorias = Object.keys(gastosPorCategoria);
-            var maxGasto = 0;
-            for (var m = 0; m < categorias.length; m++) {
-                if (gastosPorCategoria[categorias[m]] > maxGasto) {
-                    maxGasto = gastosPorCategoria[categorias[m]];
-                }
-            }
-            if (maxGasto === 0) maxGasto = 1;
-            var graficoHTML = '';
+            const gastosPorCategoria = {};
+            gastosCache.forEach(g => {
+                const cat = g.Categoría || 'Otros';
+                gastosPorCategoria[cat] = (gastosPorCategoria[cat] || 0) + (parseFloat(g.Importe) || 0);
+            });
+            const categorias = Object.keys(gastosPorCategoria);
+            const maxGasto = Math.max(...Object.values(gastosPorCategoria), 1);
+            let graficoHTML = '';
             if (categorias.length === 0) {
                 graficoHTML = '<p style="color: var(--text-light);">No hay gastos registrados</p>';
             } else {
-                for (var n = 0; n < categorias.length; n++) {
-                    var valor = gastosPorCategoria[categorias[n]];
-                    var porcentajeCat = Math.round((valor / totalGasto) * 100);
-                    var ancho = Math.round((valor / maxGasto) * 100);
-                    if (ancho < 5) ancho = 5;
-                    graficoHTML += '<div class="chart-bar-item">' +
-                        '<span class="bar-label">' + categorias[n] + '</span>' +
-                        '<div class="bar-track">' +
-                        '<div class="bar-fill" style="width: ' + ancho + '%;">' + porcentajeCat + '%</div>' +
-                        '</div>' +
-                        '<span class="bar-value">$' + valor.toLocaleString() + '</span>' +
-                        '</div>';
-                }
+                categorias.forEach(cat => {
+                    const valor = gastosPorCategoria[cat];
+                    const porcentajeCat = Math.round((valor / totalGasto) * 100);
+                    const ancho = Math.round((valor / maxGasto) * 100);
+                    graficoHTML += `
+                        <div class="chart-bar-item">
+                            <span class="bar-label">${cat}</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: ${Math.max(ancho, 5)}%;">${porcentajeCat}%</div>
+                            </div>
+                            <span class="bar-value">$${valor.toLocaleString()}</span>
+                        </div>
+                    `;
+                });
             }
             document.getElementById('graficoGastos').innerHTML = graficoHTML;
 
-            // Tareas pendientes
-            var tareasPendientesLista = [];
-            for (var o = 0; o < tareasCache.length; o++) {
-                if (tareasCache[o].Completada && tareasCache[o].Completada.toLowerCase() !== 'sí') {
-                    tareasPendientesLista.push(tareasCache[o]);
-                }
-            }
-            tareasPendientesLista = tareasPendientesLista.slice(0, 5);
-            var tareasHTML = '';
+            // Tareas pendientes (Dashboard)
+            const tareasPendientesLista = tareasCache.filter(t => t.Completada && t.Completada.toLowerCase() !== 'sí').slice(0, 5);
+            let tareasHTML = '';
             if (tareasPendientesLista.length === 0) {
-                tareasHTML = '<li style="color: var(--text-light);">Todas las tareas completadas!</li>';
+                tareasHTML = '<li style="color: var(--text-light);">🎉 ¡Todas las tareas completadas!</li>';
             } else {
-                for (var p = 0; p < tareasPendientesLista.length; p++) {
-                    var t = tareasPendientesLista[p];
-                    var prioridadClass = 'priority-low';
-                    if (t.Prioridad && t.Prioridad.toLowerCase() === 'alta') prioridadClass = 'priority-high';
-                    else if (t.Prioridad && t.Prioridad.toLowerCase() === 'media') prioridadClass = 'priority-medium';
-                    tareasHTML += '<li>' +
-                        '<input type="checkbox" onchange="toggleTarea(this, \'' + t.Título + '\')">' +
-                        '<span class="task-text">' + (t.Título || 'Sin título') + '</span>' +
-                        '<span class="task-date">' + (t.FechaLimite || '') + '</span>' +
-                        '<span class="task-priority ' + prioridadClass + '">' + (t.Prioridad || 'Media') + '</span>' +
-                        '</li>';
-                }
+                tareasPendientesLista.forEach(t => {
+                    const prioridadClass = t.Prioridad && t.Prioridad.toLowerCase() === 'alta' ? 'priority-high' :
+                        t.Prioridad && t.Prioridad.toLowerCase() === 'media' ? 'priority-medium' : 'priority-low';
+                    tareasHTML += `
+                        <li>
+                            <input type="checkbox" ${t.Completada && t.Completada.toLowerCase() === 'sí' ? 'checked' : ''} 
+                                   onchange="toggleTarea(this, '${t.Título}')">
+                            <span class="task-text ${t.Completada && t.Completada.toLowerCase() === 'sí' ? 'done' : ''}">${t.Título || 'Sin título'}</span>
+                            <span class="task-date">${t.FechaLimite || ''}</span>
+                            <span class="task-priority ${prioridadClass}">${t.Prioridad || 'Media'}</span>
+                        </li>
+                    `;
+                });
             }
             document.getElementById('listaTareasDashboard').innerHTML = tareasHTML;
 
-            // Últimos invitados
-            var ultimosInvitados = invitadosCache.slice(0, 5);
-            var invitadosHTML = '';
+            // Últimos invitados (Dashboard)
+            const ultimosInvitados = invitadosCache.slice(0, 5);
+            let invitadosHTML = '';
             if (ultimosInvitados.length === 0) {
                 invitadosHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light);">No hay invitados registrados</td></tr>';
             } else {
-                for (var q = 0; q < ultimosInvitados.length; q++) {
-                    var i = ultimosInvitados[q];
-                    var confirmado = 'status-pending';
-                    var confirmadoText = ' Pendiente';
-                    if (i.Confirmado && i.Confirmado.toLowerCase() === 'sí') {
-                        confirmado = 'status-confirmed';
-                        confirmadoText = ' Confirmado';
-                    }
-                    invitadosHTML += '<tr>' +
-                        '<td><strong>' + (i.Nombre || 'Sin nombre') + '</strong></td>' +
-                        '<td>' + (i.Grupo || '-') + '</td>' +
-                        '<td>' + (i.Email || '-') + '</td>' +
-                        '<td><span class="status-badge ' + confirmado + '">' + confirmadoText + '</span></td>' +
-                        '<td>' + (i.Acompañantes || '0') + '</td>' +
-                        '</tr>';
-                }
+                ultimosInvitados.forEach(i => {
+                    const confirmado = i.Confirmado && i.Confirmado.toLowerCase() === 'sí' ? 'status-confirmed' : 'status-pending';
+                    const confirmadoText = i.Confirmado && i.Confirmado.toLowerCase() === 'sí' ? '✅ Confirmado' : '⏳ Pendiente';
+                    invitadosHTML += `
+                        <tr>
+                            <td><strong>${i.Nombre || 'Sin nombre'}</strong></td>
+                            <td>${i.Grupo || '-'}</td>
+                            <td>${i.Email || '-'}</td>
+                            <td><span class="status-badge ${confirmado}">${confirmadoText}</span></td>
+                            <td>${i.Acompañantes || '0'}</td>
+                        </tr>
+                    `;
+                });
             }
             document.getElementById('tablaInvitadosDashboard').innerHTML = invitadosHTML;
-
-            actualizarTablaInvitados();
-            actualizarTablaGastos();
-            actualizarSalones();
-            actualizarMenus();
-            actualizarTareas();
-            actualizarProveedores();
         }
 
         // ============================================================
@@ -1128,73 +1414,48 @@
         function actualizarTablaInvitados() {
             document.getElementById('totalInvitadosSeccion').textContent = invitadosCache.length;
             
-            var grupoFiltro = document.getElementById('filtroGrupo').value;
-            var confirmadoFiltro = document.getElementById('filtroConfirmado').value;
-            var busqueda = document.getElementById('buscarInvitado').value.toLowerCase();
+            const grupoFiltro = document.getElementById('filtroGrupo').value;
+            const confirmadoFiltro = document.getElementById('filtroConfirmado').value;
+            const busqueda = document.getElementById('buscarInvitado').value.toLowerCase();
 
-            var grupos = [];
-            for (var i = 0; i < invitadosCache.length; i++) {
-                if (invitadosCache[i].Grupo && grupos.indexOf(invitadosCache[i].Grupo) === -1) {
-                    grupos.push(invitadosCache[i].Grupo);
-                }
-            }
-            var selectGrupo = document.getElementById('filtroGrupo');
-            var currentVal = selectGrupo.value;
+            // Actualizar grupos
+            const grupos = [...new Set(invitadosCache.map(i => i.Grupo).filter(g => g))];
+            const selectGrupo = document.getElementById('filtroGrupo');
+            const currentVal = selectGrupo.value;
             selectGrupo.innerHTML = '<option value="todos">Todos los grupos</option>';
-            for (var j = 0; j < grupos.length; j++) {
-                selectGrupo.innerHTML += '<option value="' + grupos[j] + '">' + grupos[j] + '</option>';
-            }
+            grupos.forEach(g => {
+                selectGrupo.innerHTML += `<option value="${g}">${g}</option>`;
+            });
             selectGrupo.value = currentVal;
 
-            var filtrados = invitadosCache;
-            if (grupoFiltro !== 'todos') {
-                var temp = [];
-                for (var k = 0; k < filtrados.length; k++) {
-                    if (filtrados[k].Grupo === grupoFiltro) temp.push(filtrados[k]);
-                }
-                filtrados = temp;
-            }
-            if (confirmadoFiltro !== 'todos') {
-                var temp2 = [];
-                for (var l = 0; l < filtrados.length; l++) {
-                    if ((filtrados[l].Confirmado || '').toLowerCase() === confirmadoFiltro.toLowerCase()) temp2.push(filtrados[l]);
-                }
-                filtrados = temp2;
-            }
-            if (busqueda) {
-                var temp3 = [];
-                for (var m = 0; m < filtrados.length; m++) {
-                    if ((filtrados[m].Nombre || '').toLowerCase().includes(busqueda)) temp3.push(filtrados[m]);
-                }
-                filtrados = temp3;
-            }
+            let filtrados = invitadosCache;
+            if (grupoFiltro !== 'todos') filtrados = filtrados.filter(i => i.Grupo === grupoFiltro);
+            if (confirmadoFiltro !== 'todos') filtrados = filtrados.filter(i => (i.Confirmado || '').toLowerCase() === confirmadoFiltro.toLowerCase());
+            if (busqueda) filtrados = filtrados.filter(i => (i.Nombre || '').toLowerCase().includes(busqueda));
 
-            var html = '';
+            let html = '';
             if (filtrados.length === 0) {
                 html = '<tr><td colspan="8" style="text-align: center; color: var(--text-light);">No hay invitados que coincidan</td></tr>';
             } else {
-                for (var n = 0; n < filtrados.length; n++) {
-                    var i = filtrados[n];
-                    var confirmado = 'status-pending';
-                    var confirmadoText = ' Pendiente';
-                    if (i.Confirmado && i.Confirmado.toLowerCase() === 'sí') {
-                        confirmado = 'status-confirmed';
-                        confirmadoText = ' Confirmado';
-                    }
-                    html += '<tr>' +
-                        '<td><strong>' + (i.Nombre || 'Sin nombre') + '</strong></td>' +
-                        '<td>' + (i.Grupo || '-') + '</td>' +
-                        '<td>' + (i.Email || '-') + '</td>' +
-                        '<td>' + (i.Teléfono || '-') + '</td>' +
-                        '<td><span class="status-badge ' + confirmado + '">' + confirmadoText + '</span></td>' +
-                        '<td>' + (i.Acompañantes || '0') + '</td>' +
-                        '<td>' + (i.Dieta || 'Ninguna') + '</td>' +
-                        '<td>' +
-                        '<button class="btn-icon" onclick="editarFila(\'invitados\', \'' + i.ID + '\')"><i class="fas fa-edit"></i></button>' +
-                        '<button class="btn-icon" onclick="eliminarFila(\'invitados\', \'' + i.ID + '\')"><i class="fas fa-trash"></i></button>' +
-                        '</td>' +
-                        '</tr>';
-                }
+                filtrados.forEach(i => {
+                    const confirmado = i.Confirmado && i.Confirmado.toLowerCase() === 'sí' ? 'status-confirmed' : 'status-pending';
+                    const confirmadoText = i.Confirmado && i.Confirmado.toLowerCase() === 'sí' ? '✅ Confirmado' : '⏳ Pendiente';
+                    html += `
+                        <tr>
+                            <td><strong>${i.Nombre || 'Sin nombre'}</strong></td>
+                            <td>${i.Grupo || '-'}</td>
+                            <td>${i.Email || '-'}</td>
+                            <td>${i.Teléfono || '-'}</td>
+                            <td><span class="status-badge ${confirmado}">${confirmadoText}</span></td>
+                            <td>${i.Acompañantes || '0'}</td>
+                            <td>${i.Dieta || 'Ninguna'}</td>
+                            <td>
+                                <button class="btn-icon" onclick="editarRegistro('invitados', '${i.ID}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" onclick="eliminarRegistro('invitados', '${i.ID}')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
             document.getElementById('tablaInvitadosCompleta').innerHTML = html;
         }
@@ -1207,70 +1468,47 @@
         // ACTUALIZAR TABLA DE GASTOS
         // ============================================================
         function actualizarTablaGastos() {
-            var total = 0;
-            for (var i = 0; i < gastosCache.length; i++) {
-                total = total + (parseFloat(gastosCache[i].Importe) || 0);
-            }
-            document.getElementById('gastoTotalSeccion').textContent = '$' + total.toLocaleString();
+            const total = gastosCache.reduce((sum, g) => sum + (parseFloat(g.Importe) || 0), 0);
+            document.getElementById('gastoTotalSeccion').textContent = `$${total.toLocaleString()}`;
 
-            var catFiltro = document.getElementById('filtroCategoriaGasto').value;
-            var pagadoFiltro = document.getElementById('filtroPagadoGasto').value;
+            const catFiltro = document.getElementById('filtroCategoriaGasto').value;
+            const pagadoFiltro = document.getElementById('filtroPagadoGasto').value;
 
-            var categorias = [];
-            for (var j = 0; j < gastosCache.length; j++) {
-                if (gastosCache[j].Categoría && categorias.indexOf(gastosCache[j].Categoría) === -1) {
-                    categorias.push(gastosCache[j].Categoría);
-                }
-            }
-            var selectCat = document.getElementById('filtroCategoriaGasto');
-            var currentCat = selectCat.value;
+            const categorias = [...new Set(gastosCache.map(g => g.Categoría).filter(c => c))];
+            const selectCat = document.getElementById('filtroCategoriaGasto');
+            const currentCat = selectCat.value;
             selectCat.innerHTML = '<option value="todos">Todas las categorías</option>';
-            for (var k = 0; k < categorias.length; k++) {
-                selectCat.innerHTML += '<option value="' + categorias[k] + '">' + categorias[k] + '</option>';
-            }
+            categorias.forEach(c => {
+                selectCat.innerHTML += `<option value="${c}">${c}</option>`;
+            });
             selectCat.value = currentCat;
 
-            var filtrados = gastosCache;
-            if (catFiltro !== 'todos') {
-                var temp = [];
-                for (var l = 0; l < filtrados.length; l++) {
-                    if (filtrados[l].Categoría === catFiltro) temp.push(filtrados[l]);
-                }
-                filtrados = temp;
-            }
-            if (pagadoFiltro !== 'todos') {
-                var temp2 = [];
-                for (var m = 0; m < filtrados.length; m++) {
-                    if ((filtrados[m].Pagado || '').toLowerCase() === pagadoFiltro.toLowerCase()) temp2.push(filtrados[m]);
-                }
-                filtrados = temp2;
-            }
+            let filtrados = gastosCache;
+            if (catFiltro !== 'todos') filtrados = filtrados.filter(g => g.Categoría === catFiltro);
+            if (pagadoFiltro !== 'todos') filtrados = filtrados.filter(g => (g.Pagado || '').toLowerCase() === pagadoFiltro.toLowerCase());
 
-            var html = '';
+            let html = '';
             if (filtrados.length === 0) {
                 html = '<tr><td colspan="7" style="text-align: center; color: var(--text-light);">No hay gastos registrados</td></tr>';
             } else {
-                for (var n = 0; n < filtrados.length; n++) {
-                    var g = filtrados[n];
-                    var pagado = 'status-unpaid';
-                    var pagadoText = ' Pendiente';
-                    if (g.Pagado && g.Pagado.toLowerCase() === 'sí') {
-                        pagado = 'status-paid';
-                        pagadoText = ' Pagado';
-                    }
-                    html += '<tr>' +
-                        '<td>' + (g.Categoría || '-') + '</td>' +
-                        '<td>' + (g.Concepto || '-') + '</td>' +
-                        '<td>' + (g.Proveedor || '-') + '</td>' +
-                        '<td><strong>$' + (parseFloat(g.Importe) || 0).toLocaleString() + '</strong></td>' +
-                        '<td>' + (g.Fecha || '-') + '</td>' +
-                        '<td><span class="status-badge ' + pagado + '">' + pagadoText + '</span></td>' +
-                        '<td>' +
-                        '<button class="btn-icon" onclick="editarFila(\'gastos\', \'' + g.ID + '\')"><i class="fas fa-edit"></i></button>' +
-                        '<button class="btn-icon" onclick="eliminarFila(\'gastos\', \'' + g.ID + '\')"><i class="fas fa-trash"></i></button>' +
-                        '</td>' +
-                        '</tr>';
-                }
+                filtrados.forEach(g => {
+                    const pagado = g.Pagado && g.Pagado.toLowerCase() === 'sí' ? 'status-paid' : 'status-unpaid';
+                    const pagadoText = g.Pagado && g.Pagado.toLowerCase() === 'sí' ? '✅ Pagado' : '⏳ Pendiente';
+                    html += `
+                        <tr>
+                            <td>${g.Categoría || '-'}</td>
+                            <td>${g.Concepto || '-'}</td>
+                            <td>${g.Proveedor || '-'}</td>
+                            <td><strong>$${(parseFloat(g.Importe) || 0).toLocaleString()}</strong></td>
+                            <td>${g.Fecha || '-'}</td>
+                            <td><span class="status-badge ${pagado}">${pagadoText}</span></td>
+                            <td>
+                                <button class="btn-icon" onclick="editarRegistro('gastos', '${g.ID}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" onclick="eliminarRegistro('gastos', '${g.ID}')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
             document.getElementById('tablaGastos').innerHTML = html;
         }
@@ -1282,30 +1520,29 @@
         // ============================================================
         // ACTUALIZAR SALONES
         // ============================================================
-        async function actualizarSalones() {
-            var raw = await obtenerDatos(RANGOS.salones);
-            salonesCache = procesarDatos(raw);
+        function actualizarSalones() {
             document.getElementById('totalSalones').textContent = salonesCache.length;
 
-            var html = '';
+            let html = '';
             if (salonesCache.length === 0) {
                 html = '<p style="color: var(--text-light);">No hay salones registrados</p>';
             } else {
-                for (var i = 0; i < salonesCache.length; i++) {
-                    var s = salonesCache[i];
-                    var incluye = s.Incluye || 'No especificado';
-                    html += '<div class="venue-card">' +
-                        '<h3>' + (s.Nombre || 'Sin nombre') + '</h3>' +
-                        '<div class="venue-detail"><i class="fas fa-map-pin"></i> ' + (s.Dirección || 'Sin dirección') + '</div>' +
-                        '<div class="venue-detail"><i class="fas fa-users"></i> Aforo: ' + (s.Aforo || '0') + ' personas</div>' +
-                        '<div class="venue-detail"><i class="fas fa-check-circle"></i> ' + incluye + '</div>' +
-                        '<div class="venue-price">$' + (parseFloat(s.Precio) || 0).toLocaleString() + '</div>' +
-                        '<div style="display: flex; gap: 10px;">' +
-                        '<button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarFila(\'salones\', \'' + s.ID + '\')"><i class="fas fa-edit"></i> Editar</button>' +
-                        '<button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarFila(\'salones\', \'' + s.ID + '\')"><i class="fas fa-trash"></i> Eliminar</button>' +
-                        '</div>' +
-                        '</div>';
-                }
+                salonesCache.forEach(s => {
+                    const incluye = s.Incluye || 'No especificado';
+                    html += `
+                        <div class="venue-card">
+                            <h3>🏛️ ${s.Nombre || 'Sin nombre'}</h3>
+                            <div class="venue-detail"><i class="fas fa-map-pin"></i> ${s.Dirección || 'Sin dirección'}</div>
+                            <div class="venue-detail"><i class="fas fa-users"></i> Aforo: ${s.Aforo || '0'} personas</div>
+                            <div class="venue-detail"><i class="fas fa-check-circle"></i> ${incluye}</div>
+                            <div class="venue-price">$${(parseFloat(s.Precio) || 0).toLocaleString()}</div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarRegistro('salones', '${s.ID}')"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarRegistro('salones', '${s.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
             document.getElementById('gridSalones').innerHTML = html;
         }
@@ -1313,28 +1550,27 @@
         // ============================================================
         // ACTUALIZAR MENÚS
         // ============================================================
-        async function actualizarMenus() {
-            var raw = await obtenerDatos(RANGOS.menus);
-            menusCache = procesarDatos(raw);
+        function actualizarMenus() {
             document.getElementById('totalMenus').textContent = menusCache.length;
 
-            var iconos = ['🥩', '🥗', '🧒', '🍝', '🐟', '🌮'];
-            var html = '';
+            const iconos = ['🥩', '🥗', '🧒', '🍝', '🐟', '🌮'];
+            let html = '';
             if (menusCache.length === 0) {
                 html = '<p style="color: var(--text-light);">No hay menús registrados</p>';
             } else {
-                for (var i = 0; i < menusCache.length; i++) {
-                    var m = menusCache[i];
-                    html += '<div class="menu-card">' +
-                        '<div class="menu-icon">' + iconos[i % iconos.length] + '</div>' +
-                        '<h3>' + (m.Nombre || 'Sin nombre') + '</h3>' +
-                        '<div class="menu-price">$' + (parseFloat(m.PrecioPersona) || 0) + ' / persona</div>' +
-                        '<div class="menu-desc">' + (m.Descripción || 'Sin descripción') + '</div>' +
-                        '<button class="btn-primary" style="padding: 6px 18px; font-size: 13px; margin-top: 10px;" onclick="editarFila(\'menus\', \'' + m.ID + '\')">' +
-                        '<i class="fas fa-edit"></i> Editar' +
-                        '</button>' +
-                        '</div>';
-                }
+                menusCache.forEach((m, idx) => {
+                    html += `
+                        <div class="menu-card">
+                            <div class="menu-icon">${iconos[idx % iconos.length]}</div>
+                            <h3>${m.Nombre || 'Sin nombre'}</h3>
+                            <div class="menu-price">$${(parseFloat(m.PrecioPersona) || 0)} / persona</div>
+                            <div class="menu-desc">${m.Descripción || 'Sin descripción'}</div>
+                            <button class="btn-primary" style="padding: 6px 18px; font-size: 13px; margin-top: 10px;" onclick="editarRegistro('menus', '${m.ID}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                    `;
+                });
             }
             document.getElementById('gridMenus').innerHTML = html;
         }
@@ -1345,25 +1581,26 @@
         function actualizarTareas() {
             document.getElementById('totalTareas').textContent = tareasCache.length;
 
-            var html = '';
+            let html = '';
             if (tareasCache.length === 0) {
                 html = '<li style="color: var(--text-light);">No hay tareas registradas</li>';
             } else {
-                for (var i = 0; i < tareasCache.length; i++) {
-                    var t = tareasCache[i];
-                    var completada = (t.Completada && t.Completada.toLowerCase() === 'sí');
-                    var prioridadClass = 'priority-low';
-                    if (t.Prioridad && t.Prioridad.toLowerCase() === 'alta') prioridadClass = 'priority-high';
-                    else if (t.Prioridad && t.Prioridad.toLowerCase() === 'media') prioridadClass = 'priority-medium';
-                    html += '<li>' +
-                        '<input type="checkbox" ' + (completada ? 'checked' : '') + ' onchange="toggleTareaCompleta(this, \'' + t.Título + '\')">' +
-                        '<span class="task-text ' + (completada ? 'done' : '') + '">' + (t.Título || 'Sin título') + '</span>' +
-                        '<span class="task-date">' + (t.FechaLimite || '') + '</span>' +
-                        '<span class="task-priority ' + prioridadClass + '">' + (t.Prioridad || 'Media') + '</span>' +
-                        '<button class="btn-icon" onclick="editarFila(\'tareas\', \'' + t.ID + '\')"><i class="fas fa-edit"></i></button>' +
-                        '<button class="btn-icon" onclick="eliminarFila(\'tareas\', \'' + t.ID + '\')"><i class="fas fa-trash"></i></button>' +
-                        '</li>';
-                }
+                tareasCache.forEach(t => {
+                    const completada = t.Completada && t.Completada.toLowerCase() === 'sí';
+                    const prioridadClass = t.Prioridad && t.Prioridad.toLowerCase() === 'alta' ? 'priority-high' :
+                        t.Prioridad && t.Prioridad.toLowerCase() === 'media' ? 'priority-medium' : 'priority-low';
+                    html += `
+                        <li>
+                            <input type="checkbox" ${completada ? 'checked' : ''} 
+                                   onchange="toggleTarea(this, '${t.Título}')">
+                            <span class="task-text ${completada ? 'done' : ''}">${t.Título || 'Sin título'}</span>
+                            <span class="task-date">${t.FechaLimite || ''}</span>
+                            <span class="task-priority ${prioridadClass}">${t.Prioridad || 'Media'}</span>
+                            <button class="btn-icon" onclick="editarRegistro('tareas', '${t.ID}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="eliminarRegistro('tareas', '${t.ID}')"><i class="fas fa-trash"></i></button>
+                        </li>
+                    `;
+                });
             }
             document.getElementById('listaTareasCompleta').innerHTML = html;
         }
@@ -1371,220 +1608,286 @@
         // ============================================================
         // ACTUALIZAR PROVEEDORES
         // ============================================================
-        async function actualizarProveedores() {
-            var raw = await obtenerDatos(RANGOS.proveedores);
-            proveedoresCache = procesarDatos(raw);
+        function actualizarProveedores() {
             document.getElementById('totalProveedores').textContent = proveedoresCache.length;
 
-            var html = '';
+            let html = '';
             if (proveedoresCache.length === 0) {
                 html = '<p style="color: var(--text-light);">No hay proveedores registrados</p>';
             } else {
-                for (var i = 0; i < proveedoresCache.length; i++) {
-                    var p = proveedoresCache[i];
-                    var contratado = 'status-not-hired';
-                    var contratadoText = ' Pendiente';
-                    if (p.Contratado && p.Contratado.toLowerCase() === 'sí') {
-                        contratado = 'status-hired';
-                        contratadoText = ' Contratado';
-                    }
-                    html += '<div class="provider-card">' +
-                        '<h3>' + (p.Nombre || 'Sin nombre') + '</h3>' +
-                        '<div class="provider-detail"><i class="fas fa-tag"></i> Servicio: ' + (p.Servicio || '-') + '</div>' +
-                        '<div class="provider-detail"><i class="fas fa-phone"></i> ' + (p.Teléfono || '-') + '</div>' +
-                        '<div class="provider-detail"><i class="fas fa-envelope"></i> ' + (p.Email || '-') + '</div>' +
-                        '<div class="provider-detail"><i class="fas fa-dollar-sign"></i> Presupuesto: $' + (parseFloat(p.Presupuesto) || 0).toLocaleString() + '</div>' +
-                        '<div style="margin: 10px 0;">' +
-                        '<span class="status-badge ' + contratado + '">' + contratadoText + '</span>' +
-                        '</div>' +
-                        '<div style="display: flex; gap: 10px;">' +
-                        '<button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarFila(\'proveedores\', \'' + p.ID + '\')"><i class="fas fa-edit"></i> Editar</button>' +
-                        '<button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarFila(\'proveedores\', \'' + p.ID + '\')"><i class="fas fa-trash"></i> Eliminar</button>' +
-                        '</div>' +
-                        '</div>';
-                }
+                proveedoresCache.forEach(p => {
+                    const contratado = p.Contratado && p.Contratado.toLowerCase() === 'sí' ? 'status-hired' : 'status-not-hired';
+                    const contratadoText = p.Contratado && p.Contratado.toLowerCase() === 'sí' ? '✅ Contratado' : '⏳ Pendiente';
+                    html += `
+                        <div class="provider-card">
+                            <h3>${p.Nombre || 'Sin nombre'}</h3>
+                            <div class="provider-detail"><i class="fas fa-tag"></i> Servicio: ${p.Servicio || '-'}</div>
+                            <div class="provider-detail"><i class="fas fa-phone"></i> ${p.Teléfono || '-'}</div>
+                            <div class="provider-detail"><i class="fas fa-envelope"></i> ${p.Email || '-'}</div>
+                            <div class="provider-detail"><i class="fas fa-dollar-sign"></i> Presupuesto: $${(parseFloat(p.Presupuesto) || 0).toLocaleString()}</div>
+                            <div style="margin: 10px 0;">
+                                <span class="status-badge ${contratado}">${contratadoText}</span>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-primary" style="padding: 6px 18px; font-size: 13px;" onclick="editarRegistro('proveedores', '${p.ID}')"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-secondary" style="padding: 6px 18px; font-size: 13px;" onclick="eliminarRegistro('proveedores', '${p.ID}')"><i class="fas fa-trash"></i> Eliminar</button>
+                            </div>
+                        </div>
+                    `;
+                });
             }
             document.getElementById('gridProveedores').innerHTML = html;
         }
 
         // ============================================================
-        // FUNCIONES PARA TAREAS (toggle)
+        // TAREAS TOGGLE
         // ============================================================
         async function toggleTarea(checkbox, titulo) {
-            var tarea = null;
-            for (var i = 0; i < tareasCache.length; i++) {
-                if (tareasCache[i].Título === titulo) {
-                    tarea = tareasCache[i];
-                    break;
-                }
+            if (!isAuthenticated) {
+                alert('⚠️ Necesitas iniciar sesión para cambiar el estado de las tareas.');
+                checkbox.checked = !checkbox.checked;
+                return;
             }
+
+            const tarea = tareasCache.find(t => t.Título === titulo);
             if (!tarea) return;
             
-            var nuevoEstado = checkbox.checked ? 'Sí' : 'No';
-            var fila = 0;
-            for (var j = 0; j < tareasCache.length; j++) {
-                if (tareasCache[j].Título === titulo) {
-                    fila = j + 2;
-                    break;
-                }
-            }
-            var rango = 'Tareas!E' + fila;
+            const nuevoEstado = checkbox.checked ? 'Sí' : 'No';
+            const fila = tareasCache.indexOf(tarea) + 2;
+            const rango = `Tareas!D${fila}`;
             
             await escribirDatos(rango, [[nuevoEstado]]);
-            await actualizarDashboard();
-        }
-
-        async function toggleTareaCompleta(checkbox, titulo) {
-            await toggleTarea(checkbox, titulo);
+            await cargarTodosLosDatos();
         }
 
         // ============================================================
-        // FUNCIONES CRUD (Crear)
+        // MODAL (Agregar/Editar)
         // ============================================================
-        function agregarInvitado() {
-            var nombre = prompt('Nombre del invitado:');
-            if (!nombre) return;
-            var grupo = prompt('Grupo (Familia/Amigos/Trabajo):') || 'Otros';
-            var email = prompt('Email:') || '';
-            var telefono = prompt('Teléfono:') || '';
-            var confirmado = confirm('Ya confirmó asistencia?') ? 'Sí' : 'No';
-            var acompanantes = prompt('Número de acompañantes:') || '0';
-            var dieta = prompt('Dieta especial (opcional):') || 'Ninguna';
+        function abrirModal(tabla, id = null) {
+            if (!isAuthenticated) {
+                alert('⚠️ Necesitas iniciar sesión con Google para agregar o editar datos.');
+                return;
+            }
 
-            var nuevosDatos = [[
-                invitadosCache.length + 1,
-                nombre,
-                grupo,
-                email,
-                telefono,
-                confirmado,
-                acompanantes,
-                dieta,
-                ''
-            ]];
-            escribirDatos(RANGOS.invitados, nuevosDatos).then(function() { actualizarDashboard(); });
+            modalTabla = tabla;
+            modalId = id;
+            
+            let data = null;
+            let titulo = 'Agregar';
+            
+            if (id) {
+                // Editar
+                const cache = obtenerCache(tabla);
+                data = cache.find(item => item.ID == id);
+                if (data) {
+                    titulo = 'Editar';
+                    modalData = data;
+                }
+            }
+            
+            document.getElementById('modalTitle').textContent = `${titulo} ${getNombreTabla(tabla)}`;
+            document.getElementById('modalForm').innerHTML = generarFormulario(tabla, data);
+            
+            // Mostrar/ocultar botón eliminar
+            const btnDelete = document.getElementById('btnDelete');
+            if (id) {
+                btnDelete.classList.remove('hidden');
+                btnDelete.onclick = function() { confirmarEliminar(tabla, id); };
+            } else {
+                btnDelete.classList.add('hidden');
+            }
+            
+            document.getElementById('modalOverlay').classList.add('active');
         }
 
-        function agregarGasto() {
-            var categoria = prompt('Categoría (Catering/Salón/Fotografía/Música/Otros):');
-            if (!categoria) return;
-            var concepto = prompt('Concepto:');
-            if (!concepto) return;
-            var proveedor = prompt('Proveedor:') || '';
-            var importe = prompt('Importe ($):');
-            if (!importe || isNaN(importe)) return;
-            var fecha = prompt('Fecha (YYYY-MM-DD):') || new Date().toISOString().split('T')[0];
-            var pagado = confirm('Ya está pagado?') ? 'Sí' : 'No';
-
-            var nuevosDatos = [[
-                gastosCache.length + 1,
-                categoria,
-                concepto,
-                proveedor,
-                parseFloat(importe),
-                fecha,
-                pagado,
-                ''
-            ]];
-            escribirDatos(RANGOS.gastos, nuevosDatos).then(function() { actualizarDashboard(); });
+        function cerrarModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            modalTabla = '';
+            modalId = null;
+            modalData = null;
         }
 
-        function agregarSalon() {
-            var nombre = prompt('Nombre del salón:');
-            if (!nombre) return;
-            var direccion = prompt('Dirección:') || '';
-            var aforo = prompt('Aforo máximo:') || '0';
-            var precio = prompt('Precio ($):');
-            if (!precio || isNaN(precio)) return;
-            var fechas = prompt('Fechas disponibles:') || '';
-            var incluye = prompt('Qué incluye? (ej: mesas, sillas, mantelería):') || '';
-
-            var nuevosDatos = [[
-                salonesCache.length + 1,
-                nombre,
-                direccion,
-                parseInt(aforo),
-                parseFloat(precio),
-                fechas,
-                incluye,
-                ''
-            ]];
-            escribirDatos(RANGOS.salones, nuevosDatos).then(function() { actualizarDashboard(); });
+        function getNombreTabla(tabla) {
+            const nombres = {
+                invitados: 'Invitado',
+                gastos: 'Gasto',
+                salones: 'Salón',
+                menus: 'Menú',
+                tareas: 'Tarea',
+                proveedores: 'Proveedor'
+            };
+            return nombres[tabla] || tabla;
         }
 
-        function agregarMenu() {
-            var nombre = prompt('Nombre del menú:');
-            if (!nombre) return;
-            var precio = prompt('Precio por persona ($):');
-            if (!precio || isNaN(precio)) return;
-            var descripcion = prompt('Descripción:') || '';
-
-            var nuevosDatos = [[
-                menusCache.length + 1,
-                nombre,
-                parseFloat(precio),
-                descripcion
-            ]];
-            escribirDatos(RANGOS.menus, nuevosDatos).then(function() { actualizarDashboard(); });
+        function obtenerCache(tabla) {
+            const caches = {
+                invitados: invitadosCache,
+                gastos: gastosCache,
+                salones: salonesCache,
+                menus: menusCache,
+                tareas: tareasCache,
+                proveedores: proveedoresCache
+            };
+            return caches[tabla] || [];
         }
 
-        function agregarTarea() {
-            var titulo = prompt('Título de la tarea:');
-            if (!titulo) return;
-            var fecha = prompt('Fecha límite (YYYY-MM-DD):') || '';
-            var prioridad = prompt('Prioridad (Alta/Media/Baja):') || 'Media';
-
-            var nuevosDatos = [[
-                tareasCache.length + 1,
-                titulo,
-                fecha,
-                'No',
-                prioridad
-            ]];
-            escribirDatos(RANGOS.tareas, nuevosDatos).then(function() { actualizarDashboard(); });
+        function getRango(tabla) {
+            return RANGOS[tabla] || '';
         }
 
-        function agregarProveedor() {
-            var nombre = prompt('Nombre del proveedor:');
-            if (!nombre) return;
-            var servicio = prompt('Servicio que ofrece:') || '';
-            var telefono = prompt('Teléfono:') || '';
-            var email = prompt('Email:') || '';
-            var contratado = confirm('Ya está contratado?') ? 'Sí' : 'No';
-            var presupuesto = prompt('Presupuesto ($):');
-            if (!presupuesto || isNaN(presupuesto)) return;
-
-            var nuevosDatos = [[
-                proveedoresCache.length + 1,
-                nombre,
-                servicio,
-                telefono,
-                email,
-                contratado,
-                parseFloat(presupuesto)
-            ]];
-            escribirDatos(RANGOS.proveedores, nuevosDatos).then(function() { actualizarDashboard(); });
+        function getEncabezados(tabla) {
+            const encabezados = {
+                invitados: ['ID', 'Nombre', 'Grupo', 'Email', 'Teléfono', 'Confirmado', 'Acompañantes', 'Dieta', 'Notas'],
+                gastos: ['ID', 'Categoría', 'Concepto', 'Proveedor', 'Importe', 'Fecha', 'Pagado', 'Notas'],
+                salones: ['ID', 'Nombre', 'Dirección', 'Aforo', 'Precio', 'FechasDisponibles', 'Incluye', 'Notas'],
+                menus: ['ID', 'Nombre', 'PrecioPersona', 'Descripción'],
+                tareas: ['ID', 'Título', 'FechaLimite', 'Completada', 'Prioridad'],
+                proveedores: ['ID', 'Nombre', 'Servicio', 'Teléfono', 'Email', 'Contratado', 'Presupuesto']
+            };
+            return encabezados[tabla] || [];
         }
 
-        function editarFila(tabla, id) {
-            alert('Funcionalidad de edición para ' + tabla + ' ID: ' + id + '\n(Próximamente implementada)');
+        function generarFormulario(tabla, data) {
+            const encabezados = getEncabezados(tabla);
+            const camposEspeciales = {
+                'Confirmado': ['Sí', 'No'],
+                'Pagado': ['Sí', 'No'],
+                'Completada': ['Sí', 'No'],
+                'Contratado': ['Sí', 'No'],
+                'Prioridad': ['Alta', 'Media', 'Baja'],
+                'Grupo': ['Familia', 'Amigos', 'Trabajo', 'Otros'],
+                'Categoría': ['Catering', 'Salón', 'Fotografía', 'Música', 'Floristería', 'Pastelería', 'Otros'],
+                'Servicio': ['Catering', 'Fotografía', 'Sonido', 'Floristería', 'Pastelería', 'Música', 'Otros']
+            };
+
+            let html = '';
+            for (let i = 0; i < encabezados.length; i++) {
+                const campo = encabezados[i];
+                if (campo === 'ID') continue; // Ocultar ID
+                
+                const valor = data ? data[campo] || '' : '';
+                const esSelect = camposEspeciales[campo] !== undefined;
+                
+                html += `<div class="form-group">`;
+                html += `<label>${campo}</label>`;
+                
+                if (esSelect) {
+                    html += `<select id="campo_${campo}">`;
+                    const opciones = camposEspeciales[campo];
+                    for (let j = 0; j < opciones.length; j++) {
+                        const selected = valor === opciones[j] ? 'selected' : '';
+                        html += `<option value="${opciones[j]}" ${selected}>${opciones[j]}</option>`;
+                    }
+                    html += `</select>`;
+                } else {
+                    html += `<input type="text" id="campo_${campo}" value="${valor}" placeholder="${campo}">`;
+                }
+                
+                html += `</div>`;
+            }
+            return html;
         }
 
-        function eliminarFila(tabla, id) {
-            if (!confirm('Eliminar registro ID: ' + id + ' de ' + tabla + '?')) return;
-            alert('Eliminar ' + tabla + ' ID: ' + id + '\n(Próximamente implementada)');
+        // ============================================================
+        // GUARDAR REGISTRO
+        // ============================================================
+        async function guardarRegistro() {
+            if (!isAuthenticated) {
+                alert('⚠️ Necesitas iniciar sesión para guardar cambios.');
+                return;
+            }
+
+            const encabezados = getEncabezados(modalTabla);
+            const cache = obtenerCache(modalTabla);
+            
+            // Obtener valores del formulario
+            const valores = [];
+            for (let i = 0; i < encabezados.length; i++) {
+                const campo = encabezados[i];
+                if (campo === 'ID') {
+                    // Si es nuevo, asignar ID automático
+                    if (!modalId) {
+                        const maxId = cache.reduce((max, item) => Math.max(max, parseInt(item.ID) || 0), 0);
+                        valores.push(maxId + 1);
+                    } else {
+                        valores.push(modalId);
+                    }
+                    continue;
+                }
+                const input = document.getElementById(`campo_${campo}`);
+                valores.push(input ? input.value : '');
+            }
+
+            // Determinar fila y rango
+            let fila = cache.length + 2; // Por defecto, al final
+            if (modalId) {
+                const index = cache.findIndex(item => item.ID == modalId);
+                if (index !== -1) fila = index + 2;
+            }
+
+            const rango = `${modalTabla}!A${fila}:${String.fromCharCode(64 + encabezados.length)}${fila}`;
+            const resultado = await escribirDatos(rango, [valores]);
+            
+            if (resultado) {
+                cerrarModal();
+                await cargarTodosLosDatos();
+                alert('✅ Registro guardado correctamente');
+            }
+        }
+
+        // ============================================================
+        // EDITAR REGISTRO
+        // ============================================================
+        function editarRegistro(tabla, id) {
+            abrirModal(tabla, id);
+        }
+
+        // ============================================================
+        // ELIMINAR REGISTRO
+        // ============================================================
+        function confirmarEliminar(tabla, id) {
+            if (confirm(`¿Estás seguro de eliminar este registro?`)) {
+                eliminarRegistro(tabla, id);
+            }
+        }
+
+        async function eliminarRegistro(tabla, id) {
+            if (!isAuthenticated) {
+                alert('⚠️ Necesitas iniciar sesión para eliminar registros.');
+                return;
+            }
+
+            const cache = obtenerCache(tabla);
+            const index = cache.findIndex(item => item.ID == id);
+            if (index === -1) return;
+
+            // En Sheets, no podemos "eliminar" filas fácilmente. En su lugar, limpiamos la fila.
+            const encabezados = getEncabezados(tabla);
+            const fila = index + 2;
+            const rango = `${tabla}!A${fila}:${String.fromCharCode(64 + encabezados.length)}${fila}`;
+            
+            // Crear array vacío para limpiar la fila
+            const valoresVacios = encabezados.map(() => '');
+            
+            const resultado = await escribirDatos(rango, [valoresVacios]);
+            
+            if (resultado) {
+                cerrarModal();
+                await cargarTodosLosDatos();
+                alert('✅ Registro eliminado correctamente');
+            }
         }
 
         // ============================================================
         // MODO OSCURO
         // ============================================================
-        var themeToggle = document.getElementById('themeToggle');
-        var htmlRoot = document.getElementById('html-root');
-        var savedTheme = localStorage.getItem('theme');
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlRoot = document.getElementById('html-root');
+        const savedTheme = localStorage.getItem('theme');
         if (savedTheme) htmlRoot.setAttribute('data-theme', savedTheme);
         themeToggle.addEventListener('click', function() {
-            var currentTheme = htmlRoot.getAttribute('data-theme');
-            var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const currentTheme = htmlRoot.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             htmlRoot.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         });
@@ -1592,14 +1895,14 @@
         // ============================================================
         // MENÚ HAMBURGUESA
         // ============================================================
-        var hamburgerBtn = document.getElementById('hamburgerBtn');
-        var sidebar = document.getElementById('sidebar');
-        var overlay = document.getElementById('sidebarOverlay');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
 
         function toggleSidebar() {
             sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
-            var icon = hamburgerBtn.querySelector('i');
+            const icon = hamburgerBtn.querySelector('i');
             icon.className = sidebar.classList.contains('open') ? 'fas fa-times' : 'fas fa-bars';
         }
         hamburgerBtn.addEventListener('click', toggleSidebar);
@@ -1608,8 +1911,8 @@
         // ============================================================
         // NAVEGACIÓN ENTRE SECCIONES
         // ============================================================
-        var navLinks = document.querySelectorAll('.nav-menu a[data-section]');
-        var sections = {
+        const navLinks = document.querySelectorAll('.nav-menu a[data-section]');
+        const sections = {
             dashboard: document.getElementById('section-dashboard'),
             invitados: document.getElementById('section-invitados'),
             gastos: document.getElementById('section-gastos'),
@@ -1619,37 +1922,51 @@
             proveedores: document.getElementById('section-proveedores')
         };
 
-        for (var i = 0; i < navLinks.length; i++) {
-            navLinks[i].addEventListener('click', function(e) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
                 if (this.closest('.theme-toggle-wrapper')) return;
-                var sectionName = this.dataset.section;
+                const sectionName = this.dataset.section;
                 if (window.innerWidth <= 768) toggleSidebar();
-                for (var j = 0; j < navLinks.length; j++) {
-                    navLinks[j].classList.remove('active');
-                }
+                navLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
-                for (var key in sections) {
-                    sections[key].classList.remove('active');
-                }
+                Object.keys(sections).forEach(key => sections[key].classList.remove('active'));
                 if (sections[sectionName]) sections[sectionName].classList.add('active');
             });
-        }
+        });
 
         // ============================================================
         // INICIALIZAR
         // ============================================================
         window.addEventListener('load', function() {
-            actualizarDashboard();
+            // Cargar la API de Google
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.onload = function() {
+                // Cargar gapi
+                const gapiScript = document.createElement('script');
+                gapiScript.src = 'https://apis.google.com/js/api.js';
+                gapiScript.onload = function() {
+                    initGoogleAPI();
+                };
+                document.head.appendChild(gapiScript);
+            };
+            document.head.appendChild(script);
         });
 
         window.addEventListener('resize', function() {
             if (window.innerWidth > 768 && sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('active');
-                var icon = hamburgerBtn.querySelector('i');
+                const icon = hamburgerBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
             }
         });
+
+        // Función para recargar datos (usar en botón de sincronización)
+        async function recargarDatos() {
+            await cargarTodosLosDatos();
+            alert('✅ Datos recargados correctamente');
+        }
     </script>
 
 </body>
